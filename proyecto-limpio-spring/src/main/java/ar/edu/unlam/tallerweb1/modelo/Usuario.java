@@ -1,5 +1,7 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
+import java.io.File;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -20,6 +22,10 @@ public class Usuario {
 	private String email;
 	private String password;
 	private String rol;
+	private String nombre;
+	private String apellido;
+	private Boolean estado;
+	private File text;
 	
 	public Long getId() {
 		return id;
@@ -46,5 +52,29 @@ public class Usuario {
 
 	public void setRol(String rol) {
 		this.rol = rol;
+	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	public String getApellido() {
+		return apellido;
+	}
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
+	public Boolean getEstado() {
+		return estado;
+	}
+	public void setEstado(Boolean estado) {
+		this.estado = estado;
+	}
+	public File getText() {
+		return text;
+	}
+	public void setText(File text) {
+		this.text = text;
 	}
 }
