@@ -26,7 +26,6 @@ public class Usuario {
 	private String apellido;
 	private Boolean estado;
 	private File text;
-	
 	public Long getId() {
 		return id;
 	}
@@ -45,11 +44,9 @@ public class Usuario {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
 	public String getRol() {
 		return rol;
 	}
-
 	public void setRol(String rol) {
 		this.rol = rol;
 	}
@@ -77,4 +74,5 @@ public class Usuario {
 	public void setText(File text) {
 		this.text = text;
 	}
+	
 }

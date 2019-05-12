@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
+import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 
 @Controller
 public class ControladorLogin {
@@ -21,6 +22,8 @@ public class ControladorLogin {
 	// @Service o @Repository y debe estar en un paquete de los indicados en applicationContext.xml
 	@Inject
 	private ServicioLogin servicioLogin;
+	private ServicioRegistrarUsuario servicioRegistrarUsuario;
+	
 
 	// Este metodo escucha la URL localhost:8080/NOMBRE_APP/login si la misma es invocada por metodo http GET
 	@RequestMapping("/login")
@@ -40,31 +43,38 @@ public class ControladorLogin {
 	// El método recibe un objeto Usuario el que tiene los datos ingresados en el form correspondiente y se corresponde con el modelAttribute definido en el
 	// tag form:form
 	@RequestMapping(path = "/validar-login", method = RequestMethod.POST)
-    public ModelAndView validarLogin(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
-        ModelMap model = new ModelMap();
+	public ModelAndView validarLogin(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
+		ModelMap model = new ModelMap();
 
-        // invoca el metodo consultarUsuario del servicio y hace un redirect a la URL /home, esto es, en lugar de enviar a una vista
-        // hace una llamada a otro action a través de la URL correspondiente a ésta
-        Usuario usuarioBuscado = servicioLogin.consultarUsuario(usuario);
-        if (usuarioBuscado != null) {
-//            request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
-//            return new ModelAndView("redirect:/home");
-        String rol=usuarioBuscado.getRol();
-        if(rol.contentEquals("user")){
-            return new ModelAndView("redirect:/home");
-        }
-
-        } else {
-            // si el usuario no existe agrega un mensaje de error en el modelo.
-            model.put("error", "Usuario o clave incorrecta");
-        }
-        return new ModelAndView("login", model);
-    }
+		// invoca el metodo consultarUsuario del servicio y hace un redirect a la URL /home, esto es, en lugar de enviar a una vista
+		// hace una llamada a otro action a través de la URL correspondiente a ésta
+		Usuario usuarioBuscado = servicioLogin.consultarUsuario(usuario);
+		if (usuarioBuscado != null) {
+//			request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
+//			return new ModelAndView("redirect:/home");
+//		String rol=usuarioBuscado.getRol();
+		if("user".equals(usuarioBuscado.getRol())){
+			return new ModelAndView("redirect:/homeUser");
+			}
+		if("admin".equals(usuarioBuscado.getRol())){
+			return new ModelAndView("redirect:/homeAdmin");
+			}
+		} else {
+			// si el usuario no existe agrega un mensaje de error en el modelo.
+			model.put("error", "Usuario o clave incorrecta");
+		}
+		return new ModelAndView("login", model);
+	}
 
 	// Escucha la URL /home por GET, y redirige a una vista.
-	@RequestMapping(path = "/home", method = RequestMethod.GET)
-	public ModelAndView irAHome() {
-		return new ModelAndView("home");
+	@RequestMapping(path = "/homeUser", method = RequestMethod.GET)
+	public ModelAndView irAHomeUser() {
+		return new ModelAndView("homeUser");
+	}
+	
+	@RequestMapping(path = "/homeAdmin", method = RequestMethod.GET)
+	public ModelAndView irAHomeAdmin() {
+		return new ModelAndView("homeAdmin");
 	}
 
 	// Escucha la url /, y redirige a la URL /login, es lo mismo que si se invoca la url /login directamente.
@@ -80,6 +90,15 @@ public class ControladorLogin {
 		Usuario usuario = new Usuario();
 		modelo.put("usuario", usuario);
 		return new ModelAndView("registrarUsuario", modelo);
+	}
+	
+	@RequestMapping(path ="/registrar-usuario", method = RequestMethod.POST)
+		public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario){
+		ModelMap modelo= new ModelMap();
+		
+		servicioRegistrarUsuario.registrarUsuario(usuario);
+		
+		return new ModelAndView("registroExitoso",modelo);
 	}
 	
 }

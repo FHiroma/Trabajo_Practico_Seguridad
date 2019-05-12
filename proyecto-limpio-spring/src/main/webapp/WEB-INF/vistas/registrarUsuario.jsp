@@ -8,19 +8,16 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1> Hola</h1>
+	<h1> hola</h1>
 	
-	<form:form action="registrarUsuario" method="POST" modelAttribute="usuario">
+		<form:form action="registrar-usuario" method="POST" modelAttribute="usuario">
+			    	
+
 					<%--Elementos de entrada de datos, el elemento path debe indicar en que atributo del objeto usuario se guardan los datos ingresados--%>
-					<form:input path="email" id="email" type="email"  class="form-control"/>
-					<br><br>
-					<form:input path="password" type="password" id="password"  class="form-control"/> 
-					<br><br>
-					<form:input path="nombre" type="text" id="nombre" placeholder="opcional" class="form-control"/>
-					<br><br>
-					<form:input path="apellido" type="text" id="apellido" placeholder="opcional" class="form-control"/>
-					<br><br> 
-					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Registrarse</button>
-	</form:form>
+					<form:input path="email" id="email" type="email" class="form-control" />
+					<form:input path="password" type="password" id="password" class="form-control"/>     		  
+					
+					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Login</button>
+				</form:form>
 </body>
 </html>
