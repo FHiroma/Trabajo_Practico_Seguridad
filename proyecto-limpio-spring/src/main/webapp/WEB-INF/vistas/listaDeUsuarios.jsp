@@ -9,6 +9,8 @@
 <title>Insert title here</title>
 </head>
 <body>
+<a href="http://localhost:8080/proyecto-limpio-spring/homeUser"> 
+<button>Atras</button> </a>	
 <c:if test="${not empty mensaje1}">
 		        <h2>Usuario ${mensaje} ha sido activado.</h2>
 		        <br>
@@ -19,15 +21,14 @@
 </c:if>	
 
 <c:forEach items="${lista}" var="usuario">
-	<h1>Email: ${usuario.email}</h1><br>
+	<h1>Email: ${usuario.email}</h1>
 		<c:if test="${usuario.estado == false}">
-		        <h4><a href="http://localhost:8080/proyecto-limpio-spring/activar-usuario?id=${usuario.id}">Activar</a></h4>
-		        <br>
+		        <h4><a href="http://localhost:8080/proyecto-limpio-spring/activar-usuario?id=${usuario.id}"><button>Activar</button></a></h4>
         </c:if>
         <c:if test="${usuario.estado == true}">
-		        <h4><a href="http://localhost:8080/proyecto-limpio-spring/desactivar-usuario?id=${usuario.id}">Desactivar</a></h4>
-		        <br>
+		        <h4><a href="http://localhost:8080/proyecto-limpio-spring/desactivar-usuario?id=${usuario.id}"><button>Desactivar</button></a></h4>
         </c:if>	
+        <a href="http://localhost:8080/proyecto-limpio-spring/ver-historial?id=${usuario.id}"><button>Historial</button></a>
 </c:forEach>
 </body>
 </html>

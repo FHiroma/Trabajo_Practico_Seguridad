@@ -1,6 +1,7 @@
 package ar.edu.unlam.tallerweb1.dao;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -50,6 +51,16 @@ public class LogDaoImpl implements LogDao{
 		}
 		log.setCodigo(codigo);
 		sessionFactory.getCurrentSession().save(log);
+	}
+
+	@Override
+	public List<Log> verHistorialDeActividad(Long id) {
+		@SuppressWarnings("unchecked")
+		List<Log> lista = sessionFactory.getCurrentSession().createCriteria(Log.class)
+				.createAlias("usuario", "usuarioDelLog")
+				.add(Restrictions.eq("usuarioDelLog.id", id))
+				.list();
+		return lista;
 	}
 	
 }
