@@ -7,6 +7,7 @@ import javax.inject.Inject;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
@@ -20,6 +21,25 @@ public class ControladorAdmin {
 	@RequestMapping("/listadoDeUsuarios")
 	public ModelAndView irAListadoDeUsuarios() {
 		ModelMap modelo = new ModelMap();
+		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
+		modelo.put("lista", lista);
+		return new ModelAndView("listaDeUsuarios",modelo);
+	}
+	
+	@RequestMapping(path="/activar-usuario")
+	public ModelAndView activarAUnUsuario(@RequestParam ("id") Long id){
+		ModelMap modelo = new ModelMap();
+		String email = servicioAdmin.activarUsuario(id);
+		modelo.put("mensaje1", email);
+		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
+		modelo.put("lista", lista);
+		return new ModelAndView("listaDeUsuarios",modelo);
+	}
+	@RequestMapping(path="/desactivar-usuario")
+	public ModelAndView desactivarAUnUsuario(@RequestParam ("id") Long id){
+		ModelMap modelo = new ModelMap();
+		String email = servicioAdmin.desactivarUsuario(id);
+		modelo.put("mensaje2", email);
 		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
 		modelo.put("lista", lista);
 		return new ModelAndView("listaDeUsuarios",modelo);

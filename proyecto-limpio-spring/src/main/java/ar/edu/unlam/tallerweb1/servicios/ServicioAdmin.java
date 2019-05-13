@@ -6,4 +6,6 @@ import ar.edu.unlam.tallerweb1.modelo.Usuario;
 
 public interface ServicioAdmin {
 	List <Usuario> traerListadoDeUsuarios();
+	String activarUsuario(Long id);
+	String desactivarUsuario(Long id);
 }

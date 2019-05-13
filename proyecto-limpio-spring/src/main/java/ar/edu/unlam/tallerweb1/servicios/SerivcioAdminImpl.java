@@ -20,6 +20,13 @@ public class SerivcioAdminImpl implements ServicioAdmin{
 	public List<Usuario> traerListadoDeUsuarios() {
 		return servicioAdmin.traerListadoDeUsuarios();
 	}
-	
-	
+
+	@Override
+	public String activarUsuario(Long id) {
+		return servicioAdmin.activarUsuario(id);
+	}
+	@Override
+	public String desactivarUsuario(Long id) {
+		return servicioAdmin.desactivarUsuario(id);
+	}
 }

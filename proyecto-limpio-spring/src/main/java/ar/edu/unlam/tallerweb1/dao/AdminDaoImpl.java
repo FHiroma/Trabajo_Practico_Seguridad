@@ -23,5 +23,22 @@ public class AdminDaoImpl implements AdminDao{
 		return listaDeUsuarios;
 	}
 
+	@Override
+	public String activarUsuario(Long id) {
+		Usuario usuario = (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
+				.add(Restrictions.eq("id", id)).uniqueResult();
+		usuario.setEstado(true);
+		sessionFactory.getCurrentSession().update(usuario);
+		return usuario.getEmail();
+	}
+	@Override
+	public String desactivarUsuario(Long id) {
+		Usuario usuario = (Usuario) sessionFactory.getCurrentSession().createCriteria(Usuario.class)
+				.add(Restrictions.eq("id", id)).uniqueResult();
+		usuario.setEstado(false);
+		sessionFactory.getCurrentSession().update(usuario);
+		return usuario.getEmail();
+	}
+
 	
 }

@@ -22,6 +22,7 @@ public class ControladorLogin {
 	// @Service o @Repository y debe estar en un paquete de los indicados en applicationContext.xml
 	@Inject
 	private ServicioLogin servicioLogin;
+	@Inject
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
 	
 
@@ -40,21 +41,21 @@ public class ControladorLogin {
 	}
 
 	// Este metodo escucha la URL validar-login siempre y cuando se invoque con metodo http POST
-	// El mÃ©todo recibe un objeto Usuario el que tiene los datos ingresados en el form correspondiente y se corresponde con el modelAttribute definido en el
+	// El método recibe un objeto Usuario el que tiene los datos ingresados en el form correspondiente y se corresponde con el modelAttribute definido en el
 	// tag form:form
 	@RequestMapping(path = "/validar-login", method = RequestMethod.POST)
 	public ModelAndView validarLogin(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
 		ModelMap model = new ModelMap();
 
 		// invoca el metodo consultarUsuario del servicio y hace un redirect a la URL /home, esto es, en lugar de enviar a una vista
-		// hace una llamada a otro action a travÃ©s de la URL correspondiente a Ã©sta
+		// hace una llamada a otro action a través de la URL correspondiente a ésta
 		Usuario usuarioBuscado = servicioLogin.consultarUsuario(usuario);
 		if (usuarioBuscado != null) {
-//			request.getSession().setAttribute("ROL", usuarioBuscado.getRol());
+			request.getSession().setAttribute("id", usuarioBuscado.getId());
+			model.put("sesion", request);
 //			return new ModelAndView("redirect:/home");
-//		String rol=usuarioBuscado.getRol();
 		if("user".equals(usuarioBuscado.getRol())){
-			return new ModelAndView("redirect:/homeUser");
+			return new ModelAndView("redirect:/homeUser",model);
 			}
 		if("admin".equals(usuarioBuscado.getRol())){
 			return new ModelAndView("redirect:/homeAdmin");
@@ -86,7 +87,6 @@ public class ControladorLogin {
 	@RequestMapping("/registro")
 	public ModelAndView registrarUsuario(){	
 		ModelMap modelo = new ModelMap();
-		
 		Usuario usuario = new Usuario();
 		modelo.put("usuario", usuario);
 		return new ModelAndView("registrarUsuario", modelo);
@@ -95,9 +95,7 @@ public class ControladorLogin {
 	@RequestMapping(path ="/registrar-usuario", method = RequestMethod.POST)
 		public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario){
 		ModelMap modelo= new ModelMap();
-		
-		servicioRegistrarUsuario.registrarUsuario(usuario);
-		
+		servicioRegistrarUsuario.registrarUsuario(usuario); 
 		return new ModelAndView("registroExitoso",modelo);
 	}
 	
