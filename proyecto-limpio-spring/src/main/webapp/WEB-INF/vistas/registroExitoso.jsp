@@ -7,6 +7,9 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>te registraste re cheto</h1>
+	<h1>Registrado con éxito</h1>
+	
+	<a href="http://localhost:8080/proyecto-limpio-spring/homeUser"> 
+	<button>Home</button> </a>	
 </body>
 </html>
