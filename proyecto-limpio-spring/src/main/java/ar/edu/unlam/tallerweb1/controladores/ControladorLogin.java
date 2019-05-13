@@ -114,7 +114,7 @@ public class ControladorLogin {
 	
 	@RequestMapping("/logout")
 	public ModelAndView logout(HttpServletRequest request){
-		servicioLog.guardarRegistro("logout", (Long)request.getAttribute("id"));
+		servicioLog.guardarRegistro("logout", (Long)request.getSession().getAttribute("id"));
 		HttpSession session = request.getSession();
 		session.invalidate();
 		return new ModelAndView("redirect:/login");
