@@ -20,6 +20,8 @@
 					<form:input path="apellido" id="apellido" type="text"  class="form-control"/>     		  
 					<br><br>
 					<label>Ingrese Su Nueva Password:</label>
+					<form:input path="password" id="password" type="password"  class="form-control"/>     		  
+					<br><br>
 					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Modificar</button>
 	</form:form>
 </body>

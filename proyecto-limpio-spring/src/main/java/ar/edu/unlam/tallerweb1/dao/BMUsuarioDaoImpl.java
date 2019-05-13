@@ -23,4 +23,18 @@ public class BMUsuarioDaoImpl implements BMUsuarioDao {
 		u.setPassword(usuario.getPassword());
 		sessionFactory.getCurrentSession().update(u);	
 	}
+
+	@Override
+	public void recuperarPassword(String email, String password) {
+		Usuario u= (Usuario) sessionFactory.getCurrentSession()
+		.createCriteria(Usuario.class)
+		.add(Restrictions.eq("email", email))
+		.uniqueResult();
+		u.setPassword(password);
+		sessionFactory.getCurrentSession().update(u);
+	}
+
+	
+
+
 }

@@ -12,7 +12,12 @@
 	<h3>Ingrese su correo electronico</h3>
 	
 	<form:form action="validar-email" method="POST" modelAttribute="usuario">
-					<form:input path="email" id="email" type="email" class="form-control" />   		  
+					<label>Email:</label>
+					<form:input path="email" id="email" type="email" class="form-control" />
+					<br><br>
+					<label>Password:</label>
+					<form:input path="password" id="password" type="password" class="form-control" />
+					<br><br>
 					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Resetear Clave</button>
 				</form:form>
 </body>
