@@ -12,6 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
+import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
 @Controller
 public class ControladorBMUsuario {
@@ -20,6 +21,8 @@ public class ControladorBMUsuario {
 	private ServicioBMUsuario servicioModificacionUsuario;
 	@Inject 
 	private ServicioBMUsuario servicioRecuperarPassword;
+	@Inject
+	private ServicioLog servicioLog;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -33,6 +36,7 @@ public class ControladorBMUsuario {
 	public ModelAndView modificarDatosUsuario(@ModelAttribute("usuario") Usuario usuario , HttpServletRequest request){
 		Long id=(Long)request.getSession().getAttribute("id");
 		servicioModificacionUsuario.modificarUsuario(id, usuario);
+		servicioLog.guardarRegistro("modificar-datos", id);
 		return new ModelAndView("mensajeActualizacion");
 	}
 	
