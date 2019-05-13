@@ -13,6 +13,9 @@
 			<a href="http://localhost:8080/proyecto-limpio-spring/actualizar-datos-usuario"> 
 				<h3 class="form-signin-heading">Actualizar Datos</h3> </a>
 				
+			<a href="http://localhost:8080/proyecto-limpio-spring/crear-texto"> 
+				<h3 class="form-signin-heading">Crea un texto</h3> </a>
+				
 				<a href="http://localhost:8080/proyecto-limpio-spring/logout"> 
 				<button>Log out</button> </a>	
 		</div>

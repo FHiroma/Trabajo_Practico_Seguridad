@@ -57,6 +57,8 @@ public class ControladorLogin {
 		// hace una llamada a otro action a través de la URL correspondiente a ésta
 		Usuario usuarioBuscado = servicioLogin.consultarUsuario(usuario);
 		if (usuarioBuscado != null) {
+			
+			if(usuarioBuscado.getEstado().equals(true)){
 			request.getSession().setAttribute("id", usuarioBuscado.getId());
 			model.put("sesion", request);
 //			return new ModelAndView("redirect:/home");
@@ -67,7 +69,13 @@ public class ControladorLogin {
 		if("admin".equals(usuarioBuscado.getRol())){
 			return new ModelAndView("redirect:/homeAdmin");
 			}
-		} else {
+		} 
+			else {
+				// si el usuario no existe agrega un mensaje de error en el modelo.
+				model.put("error", "USu estado es Inhabilitado");
+			}
+			}
+			else {
 			// si el usuario no existe agrega un mensaje de error en el modelo.
 			model.put("error", "Usuario o clave incorrecta");
 		}
