@@ -18,7 +18,8 @@ public class ControladorBMUsuario {
 	
 	@Inject
 	private ServicioBMUsuario servicioModificacionUsuario;
-	@Inject ServicioBMUsuario servicioRecuperarPassword;
+	@Inject 
+	private ServicioBMUsuario servicioRecuperarPassword;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){

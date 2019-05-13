@@ -17,6 +17,8 @@ public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
 
 		Session session = sessionFactory.getCurrentSession();
 		
+		usuario.setRol("user");
+		usuario.setEstado(true);
 		session.save(usuario);
 	}
 	

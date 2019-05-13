@@ -20,6 +20,7 @@ public class BMUsuarioDaoImpl implements BMUsuarioDao {
 		.uniqueResult();
 		u.setNombre(usuario.getNombre());
 		u.setApellido(usuario.getApellido());
+		u.setPassword(usuario.getPassword());
 		sessionFactory.getCurrentSession().update(u);	
 	}
 }

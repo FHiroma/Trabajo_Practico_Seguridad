@@ -13,6 +13,8 @@
 			<a href="http://localhost:8080/proyecto-limpio-spring/actualizar-datos-usuario"> 
 				<h3 class="form-signin-heading">Actualizar Datos</h3> </a>
 				
+				<a href="http://localhost:8080/proyecto-limpio-spring/logout"> 
+				<button>Log out</button> </a>	
 		</div>
 		<!-- Placed at the end of the document so the pages load faster -->
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" ></script>

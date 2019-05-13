@@ -1,7 +1,10 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
+import java.time.LocalDateTime;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -74,7 +77,13 @@ public class ControladorLogin {
 	}
 	
 	@RequestMapping(path = "/homeAdmin", method = RequestMethod.GET)
-	public ModelAndView irAHomeAdmin() {
+	public ModelAndView irAHomeAdmin(HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		if (session == null) {
+		    return new ModelAndView("redirect:/login");
+		}
+		
 		return new ModelAndView("homeAdmin");
 	}
 
@@ -99,4 +108,14 @@ public class ControladorLogin {
 		return new ModelAndView("registroExitoso",modelo);
 	}
 	
+	@RequestMapping("/logout")
+	public ModelAndView logout(HttpServletRequest request){
+
+		HttpSession session = request.getSession();
+		
+		session.invalidate();
+		return new ModelAndView("redirect:/login");
+	}	
+
 }
+	

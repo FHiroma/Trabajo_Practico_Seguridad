@@ -19,6 +19,7 @@
 					<label>Ingrese Su Apellido:</label>
 					<form:input path="apellido" id="apellido" type="text"  class="form-control"/>     		  
 					<br><br>
+					<label>Ingrese Su Nueva Password:</label>
 					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Modificar</button>
 	</form:form>
 </body>
