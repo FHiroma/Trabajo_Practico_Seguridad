@@ -1,7 +1,5 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
-import java.time.LocalDateTime;
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -50,29 +48,37 @@ public class ControladorLogin {
 	// El método recibe un objeto Usuario el que tiene los datos ingresados en el form correspondiente y se corresponde con el modelAttribute definido en el
 	// tag form:form
 	@RequestMapping(path = "/validar-login", method = RequestMethod.POST)
-	public ModelAndView validarLogin(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
-		ModelMap model = new ModelMap();
+    public ModelAndView validarLogin(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
+        ModelMap model = new ModelMap();
 
-		// invoca el metodo consultarUsuario del servicio y hace un redirect a la URL /home, esto es, en lugar de enviar a una vista
-		// hace una llamada a otro action a través de la URL correspondiente a ésta
-		Usuario usuarioBuscado = servicioLogin.consultarUsuario(usuario);
-		if (usuarioBuscado != null) {
-			request.getSession().setAttribute("id", usuarioBuscado.getId());
-			model.put("sesion", request);
-//			return new ModelAndView("redirect:/home");
-		if("user".equals(usuarioBuscado.getRol())){
-			servicioLog.guardarRegistro("login", usuarioBuscado.getId());
-			return new ModelAndView("redirect:/homeUser",model);
-			}
-		if("admin".equals(usuarioBuscado.getRol())){
-			return new ModelAndView("redirect:/homeAdmin");
-			}
-		} else {
-			// si el usuario no existe agrega un mensaje de error en el modelo.
-			model.put("error", "Usuario o clave incorrecta");
-		}
-		return new ModelAndView("login", model);
-	}
+        // invoca el metodo consultarUsuario del servicio y hace un redirect a la URL /home, esto es, en lugar de enviar a una vista
+        // hace una llamada a otro action a través de la URL correspondiente a ésta
+        Usuario usuarioBuscado = servicioLogin.consultarUsuario(usuario);
+        if (usuarioBuscado != null) {
+
+            if(usuarioBuscado.getEstado().equals(true)){
+            request.getSession().setAttribute("id", usuarioBuscado.getId());
+            model.put("sesion", request);
+//            return new ModelAndView("redirect:/home");
+        if("user".equals(usuarioBuscado.getRol())){
+            servicioLog.guardarRegistro("login", usuarioBuscado.getId());
+            return new ModelAndView("redirect:/homeUser",model);
+            }
+        if("admin".equals(usuarioBuscado.getRol())){
+            return new ModelAndView("redirect:/homeAdmin");
+            }
+        } 
+            else {
+                // si el usuario no existe agrega un mensaje de error en el modelo.
+                model.put("error", "Estado de usuario:Inhabilitado");
+            }
+            }
+            else {
+            // si el usuario no existe agrega un mensaje de error en el modelo.
+            model.put("error", "Usuario o clave incorrecta");
+        }
+        return new ModelAndView("login", model);
+    }
 
 	// Escucha la URL /home por GET, y redirige a una vista.
 	@RequestMapping(path = "/homeUser", method = RequestMethod.GET)

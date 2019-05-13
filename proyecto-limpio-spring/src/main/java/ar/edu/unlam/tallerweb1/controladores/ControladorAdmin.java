@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import ar.edu.unlam.tallerweb1.modelo.Log;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
+import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
 @Controller
 public class ControladorAdmin {
 	@Inject
 	private ServicioAdmin servicioAdmin;
+	@Inject ServicioLog servicioLog;
 
 	@RequestMapping("/listadoDeUsuarios")
 	public ModelAndView irAListadoDeUsuarios() {
@@ -43,5 +46,12 @@ public class ControladorAdmin {
 		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
 		modelo.put("lista", lista);
 		return new ModelAndView("listaDeUsuarios",modelo);
+	}
+	@RequestMapping(path="/ver-historial")
+	public ModelAndView traerHistorialDelUsuario(@RequestParam ("id") Long id){
+		ModelMap modelo = new ModelMap();
+		List<Log> listado = servicioLog.traerRegistrosDelUsuario(id);
+		modelo.put("lista", listado);
+		return new ModelAndView("historialDeActividad",modelo);
 	}
 }
