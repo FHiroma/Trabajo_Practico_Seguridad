@@ -17,5 +17,4 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 	public void registrarUsuario (Usuario usuario) {
 		servicioRegitrarUsuarioDao.registrarUsuario(usuario);
 	}
-
 }

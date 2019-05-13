@@ -16,6 +16,7 @@ public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
 	public void registrarUsuario(Usuario usuario) {
 
 		Session session = sessionFactory.getCurrentSession();
+		
 		session.save(usuario);
 	}
 	

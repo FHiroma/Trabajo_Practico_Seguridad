@@ -28,6 +28,9 @@
 				<a href="http://localhost:8080/proyecto-limpio-spring/registro"> 
 				<h3 class="form-signin-heading">Registrate</h3> </a>
 				
+				<a href="http://localhost:8080/proyecto-limpio-spring/recuperar-password"> 
+				<h3 class="form-signin-heading">Recuperar Contrase�a</h3> </a>
+				
 				<%--Bloque que es visible si el elemento error no está vacío	--%>
 				<c:if test="${not empty error}">
 			        <h4><span>${error}</span></h4>
