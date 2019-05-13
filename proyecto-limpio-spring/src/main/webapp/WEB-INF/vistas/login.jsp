@@ -31,9 +31,14 @@
 				<a href="http://localhost:8080/proyecto-limpio-spring/recuperar-password"> 
 				<h3 class="form-signin-heading">Recuperar Contrase�a</h3> </a>
 				
+				
 				<%--Bloque que es visible si el elemento error no está vacío	--%>
 				<c:if test="${not empty error}">
 			        <h4><span>${error}</span></h4>
+			        <br>
+		        </c:if>	
+		        <c:if test="${not empty password}">
+			        <h4><span>${password}</span></h4>
 			        <br>
 		        </c:if>	
 			</div>

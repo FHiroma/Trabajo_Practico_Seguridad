@@ -48,13 +48,16 @@ public class ControladorBMUsuario {
 		return new ModelAndView("recuperarPassword",modelo);
 	}
 	
-//	@RequestMapping(path="/validar-email", method = RequestMethod.POST)
-//	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario){
-//		String email= usuario.getEmail();
-//		if(servicioRecuperarPassword.recuperarPassword(email)){
-//			return new ModelAndView();
-//		}
-//	}
+	@RequestMapping(path="/validar-email", method = RequestMethod.POST)
+	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario){
+		String email= usuario.getEmail();
+		String password=usuario.getPassword();
+		servicioRecuperarPassword.recuperarPassword(email, password);
+		ModelMap model = new ModelMap();
+		model.put("password", "Actualizacion de contraseña exitosa, Ingrese su usuario y su nueva clave");
+		
+		return new ModelAndView("login", model);
+	}
 }
 
 
