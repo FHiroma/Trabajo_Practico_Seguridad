@@ -9,7 +9,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-<a href="http://localhost:8080/proyecto-limpio-spring/homeUser"> 
+<a href="#" onclick="history.go(-1)">
 <button>Atras</button> </a>	
 <c:if test="${not empty mensaje1}">
 		        <h2>Usuario ${mensaje} ha sido activado.</h2>

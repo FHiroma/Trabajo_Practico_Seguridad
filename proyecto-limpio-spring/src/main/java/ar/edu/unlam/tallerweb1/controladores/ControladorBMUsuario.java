@@ -14,22 +14,6 @@ import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
-import java.awt.BorderLayout;
-import java.awt.Container;
-import java.awt.event.ActionEvent;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JEditorPane;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.text.JTextComponent;
-import javax.swing.text.html.HTMLEditorKit;
-
 @Controller
 public class ControladorBMUsuario {
 	

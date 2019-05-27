@@ -3,6 +3,8 @@ package ar.edu.unlam.tallerweb1.controladores;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -48,7 +50,16 @@ public class ControladorAdmin {
 		return new ModelAndView("listaDeUsuarios",modelo);
 	}
 	@RequestMapping(path="/ver-historial")
-	public ModelAndView traerHistorialDelUsuario(@RequestParam ("id") Long id){
+	public ModelAndView traerHistorialDelUsuario(@RequestParam ("id") Long id,HttpServletRequest request){
+		String rol=(String)request.getSession().getAttribute("rol");
+		HttpSession session = request.getSession();
+		if (session == null) {
+			session.invalidate();
+		    return new ModelAndView("redirect:/login");
+		}
+		if(!"admin".equals(rol)){
+			return new ModelAndView("redirect:/homeUser");
+		}
 		ModelMap modelo = new ModelMap();
 		List<Log> listado = servicioLog.traerRegistrosDelUsuario(id);
 		modelo.put("lista", listado);
