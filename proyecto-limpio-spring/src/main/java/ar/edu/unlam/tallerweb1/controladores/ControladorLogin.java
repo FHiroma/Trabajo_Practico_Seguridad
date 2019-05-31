@@ -27,7 +27,6 @@ public class ControladorLogin {
 	@Inject
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
 	
-	
 	// Este metodo escucha la URL localhost:8080/NOMBRE_APP/login si la misma es invocada por metodo http GET
 	@RequestMapping("/login")
 	public ModelAndView irALogin() {
@@ -123,8 +122,13 @@ public class ControladorLogin {
 	@RequestMapping(path ="/registrar-usuario", method = RequestMethod.POST)
 		public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario){
 		ModelMap modelo= new ModelMap();
-		servicioRegistrarUsuario.registrarUsuario(usuario); 
-		return new ModelAndView("registroExitoso",modelo);
+			if(servicioRegistrarUsuario.registrarUsuario(usuario)){
+				modelo.put("usuario", usuario);
+				return new ModelAndView("homeUser",modelo);
+			}else{
+				modelo.put("errorRegistro", "Ya existe una cuenta registrada con el Email ingresado");
+				return new ModelAndView("login",modelo);
+			}
 	}
 	
 	@RequestMapping("/logout")

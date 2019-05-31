@@ -41,7 +41,7 @@ public class ControladorBMUsuario {
 	}
 	
 	@RequestMapping("/recuperar-password")
-	public ModelAndView recuperarContraseña(){
+	public ModelAndView recuperarContraseÃ±a(){
 		ModelMap modelo = new ModelMap();	
 		Usuario usuario = new Usuario();
 		modelo.put("usuario", usuario);
@@ -54,7 +54,7 @@ public class ControladorBMUsuario {
 		String password=usuario.getPassword();
 		servicioRecuperarPassword.recuperarPassword(email, password);
 		ModelMap model = new ModelMap();
-		model.put("password", "Actualizacion de contraseña exitosa, Ingrese su usuario y su nueva clave");
+		model.put("password", "Actualizacion de contraseï¿½a exitosa, Ingrese su usuario y su nueva clave");
 		
 		return new ModelAndView("login", model);
 	}

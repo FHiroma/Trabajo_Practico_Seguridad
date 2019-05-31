@@ -40,7 +40,11 @@
 		        <c:if test="${not empty password}">
 			        <h4><span>${password}</span></h4>
 			        <br>
-		        </c:if>	
+		        </c:if>
+		        <c:if test="${not empty errorRegistro}">
+			        <h4><span>${errorRegistro}</span></h4>
+			        <br>
+		        </c:if>		
 			</div>
 		</div>
 		

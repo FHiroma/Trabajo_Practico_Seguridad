@@ -8,7 +8,9 @@
 	</head>
 	<body>
 		<div class = "container">
-			<h1>Bienvenido</h1>
+			
+		<h1>Bienvenido!</h1>
+		<h3>Se ha registrado con exito con su mail: ${usuario.email}</h3>
 			
 			<a href="http://localhost:8080/proyecto-limpio-spring/actualizar-datos-usuario"> 
 				<h3 class="form-signin-heading">Actualizar Datos</h3> </a>

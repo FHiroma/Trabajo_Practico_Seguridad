@@ -1,8 +1,9 @@
 package ar.edu.unlam.tallerweb1.dao;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -13,13 +14,19 @@ public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
     private SessionFactory sessionFactory;
 	
 	@Override
-	public void registrarUsuario(Usuario usuario) {
-
-		Session session = sessionFactory.getCurrentSession();
-		
-		usuario.setRol("user");
-		usuario.setEstado(true);
-		session.save(usuario);
+	public boolean registrarUsuario(Usuario usuario) {
+		@SuppressWarnings("unchecked")
+		List<Usuario> listaUsuario=(List<Usuario>)sessionFactory
+				.getCurrentSession().createCriteria(Usuario.class)
+				.add(Restrictions.like("email", usuario.getEmail()))
+				.list();
+		if(listaUsuario.isEmpty()){
+			usuario.setRol("user");
+			usuario.setEstado(true);
+			sessionFactory.getCurrentSession().save(usuario);
+			return true;
+		}else{
+			return false;
+		}
 	}
-	
 }
