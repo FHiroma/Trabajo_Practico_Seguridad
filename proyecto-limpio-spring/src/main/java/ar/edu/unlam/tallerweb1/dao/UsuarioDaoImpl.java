@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import javax.inject.Inject;
+import org.springframework.security.crypto.bcrypt.*;
 
 // implelemtacion del DAO de usuarios, la anotacion @Repository indica a Spring que esta clase es un componente que debe
 // ser manejado por el framework, debe indicarse en applicationContext que busque en el paquete ar.edu.unlam.tallerweb1.dao
@@ -24,10 +25,14 @@ public class UsuarioDaoImpl implements UsuarioDao {
 		// de busqueda de Usuario donde el email y password sean iguales a los del objeto recibido como parametro
 		// uniqueResult da error si se encuentran más de un resultado en la busqueda.
 		final Session session = sessionFactory.getCurrentSession();
-		return (Usuario) session.createCriteria(Usuario.class)
+		Usuario u= (Usuario) session.createCriteria(Usuario.class)
 				.add(Restrictions.eq("email", usuario.getEmail()))
-				.add(Restrictions.eq("password", usuario.getPassword()))
 				.uniqueResult();
+		if(BCrypt.checkpw(usuario.getPassword(), u.getPassword())){
+			return u;
+		}else{
+			return null;
+		}
 	}
 
 }
