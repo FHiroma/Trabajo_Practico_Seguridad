@@ -1,0 +1,46 @@
+.error{
+	margin-top: 15px;
+	color: #dc3545;
+    font-weight: 700;
+    font-size: 12px;
+}
+.Corta {
+    width: 50%;
+    background-color: #dc3545;
+    margin-top: 15px;
+    padding : 3px;
+    height: 3px;
+    color: #dc3545;
+    font-weight: 700;
+    font-size: 12px;
+}
+.Debil {
+    width: 50%;
+    background-color: #ffc107;
+    margin-top: 15px;
+    padding : 3px;
+    height: 3px;
+    color: #ffc107;
+    font-weight: 700;
+    font-size: 12px;
+}
+.Buena {
+    width: 50%;
+    background-color: #28a745;
+    margin-top: 15px;
+    padding : 3px;
+    height: 3px;
+    color: #28a745;
+    font-weight: 700;
+    font-size: 12px;
+}
+.Fuerte {
+    width: 50%;
+    background-color: #d39e00;
+    margin-top: 15px;
+    padding : 3px;
+    height: 3px;
+    color: #d39e00;
+    font-weight: 700;
+    font-size: 12px;
+}
