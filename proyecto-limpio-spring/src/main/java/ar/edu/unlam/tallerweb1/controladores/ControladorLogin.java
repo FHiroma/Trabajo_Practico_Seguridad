@@ -93,16 +93,14 @@ public class ControladorLogin {
 		
 		String rol=(String)request.getSession().getAttribute("rol");
 		HttpSession session = request.getSession();
-		if (rol == null) {
-			session.invalidate();
-		    return new ModelAndView("redirect:/login");
-		}
-		
-		if(!"admin".equals(rol)){
-			return new ModelAndView("redirect:/homeUser");
-		}
-		
-		return new ModelAndView("homeAdmin");	
+			if (rol == null) {
+				session.invalidate();
+				return new ModelAndView("redirect:/login");
+			}
+			if(!"admin".equals(rol)){
+				return new ModelAndView("redirect:/homeUser");
+			}
+				return new ModelAndView("homeAdmin");	
 	}
 
 	// Escucha la url /, y redirige a la URL /login, es lo mismo que si se invoca la url /login directamente.
@@ -111,39 +109,15 @@ public class ControladorLogin {
 		return new ModelAndView("redirect:/login");
 	}
 	
-	@RequestMapping("/registro")
-	public ModelAndView registrarUsuario(){	
-		ModelMap modelo = new ModelMap();
-		Usuario usuario = new Usuario();
-		modelo.put("usuario", usuario);
-		return new ModelAndView("registrarUsuario", modelo);
-	}
-	
-	@RequestMapping(path ="/registrar-usuario", method = RequestMethod.POST)
-		public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario){
-		ModelMap modelo= new ModelMap();
-			if(servicioRegistrarUsuario.registrarUsuario(usuario)){
-				modelo.put("usuario", usuario);
-				return new ModelAndView("homeUser",modelo);
-			}else{
-				modelo.put("errorRegistro", "Ya existe una cuenta registrada con el Email ingresado");
-				return new ModelAndView("login",modelo);
-			}
-	}
-	
 	@RequestMapping("/logout")
 	public ModelAndView logout(HttpServletRequest request){
-
 		HttpSession session = request.getSession();
-		
 		if( session != null){
 		request.removeAttribute("id");
 		request.removeAttribute("rol");
 		session.invalidate();
-		}
-		
+		}	
 		return new ModelAndView("redirect:/login");
 	}
-
 }
 	

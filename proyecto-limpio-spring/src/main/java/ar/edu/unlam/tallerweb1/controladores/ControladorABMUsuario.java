@@ -13,9 +13,10 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
+import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 
 @Controller
-public class ControladorBMUsuario {
+public class ControladorABMUsuario {
 	
 	@Inject
 	private ServicioBMUsuario servicioModificacionUsuario;
@@ -23,6 +24,8 @@ public class ControladorBMUsuario {
 	private ServicioBMUsuario servicioRecuperarPassword;
 	@Inject
 	private ServicioLog servicioLog;
+	@Inject
+	private ServicioRegistrarUsuario servicioRegistrarUsuario;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -57,6 +60,30 @@ public class ControladorBMUsuario {
 		model.put("password", "Actualizacion de contrase�a exitosa, Ingrese su usuario y su nueva clave");
 		
 		return new ModelAndView("login", model);
+	}
+	
+	@RequestMapping("/registro")
+	public ModelAndView registrarUsuario(){	
+		ModelMap modelo = new ModelMap();
+		Usuario usuario = new Usuario();
+		modelo.put("usuario", usuario);
+		return new ModelAndView("registrarUsuario", modelo);
+	}
+	
+	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
+	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario){
+		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
+		String mensaje="";
+		ModelMap model = new ModelMap();
+		
+		if(validarPass){
+			return new ModelAndView("homeUser");
+		}else{
+			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
+			model.put("mensaje", mensaje);
+			return new ModelAndView("registrarUsuario", model);
+		}
+			
 	}
 	
 //	@RequestMapping("/crear-texto")
