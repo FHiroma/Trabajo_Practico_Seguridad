@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,9 +35,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		      try {
 		         // Apertura del fichero y creacion de BufferedReader para poder
 		    	 //Indico localización del txt a comparar
-		         commonPass = new File ("C://Users/gabri/miau/Trabajo_Practico_Seguridad/pass10000.txt");
-//		         c://pass10000.txt
-		         
+		         commonPass = new File ("c://pass10000.txt");
 		         fr = new FileReader (commonPass);
 		         br = new BufferedReader(fr);
 
@@ -68,11 +67,20 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		            return false;
 		         }
 		      }
-		    servicioRegitrarUsuarioDao.registrarUsuario(usuario);  
-			return true;
+		      //Se valida fortaleza de pass
+		       int  cont= 0;
+		                if (pass.matches(".*[a-zA-Z].*")&&pass.matches(".*[0-9].*")&&pass.matches(".*[!,%,&,@,#,$,^,*,?,_,~].*")) {
+		                    cont=1; 
+		                    } 
+		                if(cont>=1){
+		                	servicioRegitrarUsuarioDao.registrarUsuario(usuario);
+		                	return true;
+		                } else{
+		                	return false;
+		                }
+		
 		} else{
-			servicioRegitrarUsuarioDao.registrarUsuario(usuario);
-			return true;
+			return false;
 		} 
 		
 	}
