@@ -45,7 +45,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		         String aux;
 		         while((linea=br.readLine())!=null){
 		            //Esta linea es para controlar por consola que se lea correctamente el archivo
-		        	 System.out.println(linea);
+		        	 //System.out.println(linea);
 		        	 aux = linea;
 		        	
 		        	 //Valida que el pass no se encuentre en el archivo
