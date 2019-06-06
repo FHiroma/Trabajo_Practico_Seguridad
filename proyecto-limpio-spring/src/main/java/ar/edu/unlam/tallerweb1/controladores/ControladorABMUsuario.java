@@ -1,5 +1,15 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
@@ -84,6 +94,37 @@ public class ControladorABMUsuario {
 			return new ModelAndView("registrarUsuario", model);
 		}
 			
+	}
+	
+	@RequestMapping(path="/crear-texto")
+	public ModelAndView crearTexto(HttpServletRequest request){
+		
+		ModelMap model = new ModelMap();
+		
+		Long usuarioId = (Long)request.getSession().getAttribute("id");
+		System.out.println(usuarioId);
+		
+        try {
+            //Whatever the file path is.
+            File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario_text_"+usuarioId+".txt");
+            FileOutputStream is = new FileOutputStream(statText);
+            OutputStreamWriter osw = new OutputStreamWriter(is);    
+            Writer w = new BufferedWriter(osw);
+            w.write("POTATO!!!");
+            w.close();
+        } catch (IOException e) {
+            System.err.println("Problem writing to the file statsTest.txt");
+        }
+    
+
+//    File archivo = new File("configuracion.json");
+//        if (!archivo.exists()) {
+//            System.out.println("OJO: ¡¡No existe el archivo de configuración!!");
+//        }
+       
+		model.put("id",usuarioId);
+		
+		return new ModelAndView("texto",model);
 	}
 	
 //	@RequestMapping("/crear-texto")
