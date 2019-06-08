@@ -67,7 +67,7 @@ public class ControladorABMUsuario {
 		String password=usuario.getPassword();
 		servicioRecuperarPassword.recuperarPassword(email, password);
 		ModelMap model = new ModelMap();
-		model.put("password", "Actualizacion de contrase�a exitosa, Ingrese su usuario y su nueva clave");
+		model.put("password", "Actualizacion de contraseña exitosa, Ingrese su usuario y su nueva clave");
 		
 		return new ModelAndView("login", model);
 	}
@@ -96,36 +96,49 @@ public class ControladorABMUsuario {
 			
 	}
 	
-	@RequestMapping(path="/crear-texto")
-	public ModelAndView crearTexto(HttpServletRequest request){
+	@RequestMapping("/crear-texto")
+	public ModelAndView crearTxt(HttpServletRequest request){
+		ModelMap model = new ModelMap();
+		
+		Usuario usuario = new Usuario();
+		model.put("usuario", usuario);
+				
+		return new ModelAndView("vista-txt",model);
+	}
+	
+	@RequestMapping(path="/texto-ok", method= RequestMethod.POST)
+	public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
 		
 		ModelMap model = new ModelMap();
 		
 		Long usuarioId = (Long)request.getSession().getAttribute("id");
+	
 		System.out.println(usuarioId);
 		
+		
+		//String mensaje =(String) request.getSession().getAttribute("text");
+		String mensaje = usuario.getText();
+	//	Long usuarioId = usuario.getId();
         try {
             //Whatever the file path is.
-            File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario_text_"+usuarioId+".txt");
+              File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+usuarioId+"_text.txt");
+         //   File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario_text_.txt");
             FileOutputStream is = new FileOutputStream(statText);
             OutputStreamWriter osw = new OutputStreamWriter(is);    
             Writer w = new BufferedWriter(osw);
-            w.write("POTATO!!!");
+            w.write(mensaje);
             w.close();
         } catch (IOException e) {
             System.err.println("Problem writing to the file statsTest.txt");
         }
-    
-
-//    File archivo = new File("configuracion.json");
-//        if (!archivo.exists()) {
-//            System.out.println("OJO: ¡¡No existe el archivo de configuración!!");
-//        }
-       
+           
 		model.put("id",usuarioId);
+		model.put("mensaje",mensaje);
 		
 		return new ModelAndView("texto",model);
 	}
+	
+
 	
 //	@RequestMapping("/crear-texto")
 //	public ModelAndView crearTexto(){

@@ -27,7 +27,7 @@ public class Usuario {
 	private String nombre;
 	private String apellido;
 	private Boolean estado;
-	private File text;
+	private String text;
 	public Long getId() {
 		return id;
 	}
@@ -70,10 +70,10 @@ public class Usuario {
 	public void setEstado(Boolean estado) {
 		this.estado = estado;
 	}
-	public File getText() {
+	public String getText() {
 		return text;
 	}
-	public void setText(File text) {
+	public void setText(String text) {
 		this.text = text;
 	}
 	
