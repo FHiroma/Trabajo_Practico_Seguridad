@@ -28,11 +28,12 @@ public class UsuarioDaoImpl implements UsuarioDao {
 		Usuario u= (Usuario) session.createCriteria(Usuario.class)
 				.add(Restrictions.eq("email", usuario.getEmail()))
 				.uniqueResult();
+		
 		if(BCrypt.checkpw(usuario.getPassword(), u.getPassword())){
 			return u;
 		}else{
 			return null;
 		}
 	}
-
+	
 }

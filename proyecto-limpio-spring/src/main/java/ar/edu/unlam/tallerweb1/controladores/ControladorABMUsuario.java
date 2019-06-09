@@ -1,14 +1,19 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
@@ -16,13 +21,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
+import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 
 @Controller
@@ -36,6 +44,8 @@ public class ControladorABMUsuario {
 	private ServicioLog servicioLog;
 	@Inject
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
+	@Inject
+	private ServicioLogin servicioLogin;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -67,7 +77,7 @@ public class ControladorABMUsuario {
 		String password=usuario.getPassword();
 		servicioRecuperarPassword.recuperarPassword(email, password);
 		ModelMap model = new ModelMap();
-		model.put("password", "Actualizacion de contraseña exitosa, Ingrese su usuario y su nueva clave");
+		model.put("password", "Actualizacion de contrase�a exitosa, Ingrese su usuario y su nueva clave");
 		
 		return new ModelAndView("login", model);
 	}
@@ -81,8 +91,10 @@ public class ControladorABMUsuario {
 	}
 	
 	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
-	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario){
+	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
 		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
+		request.getSession().setAttribute("id", usuario.getId());
+		request.getSession().setAttribute("rol", usuario.getRol());
 		String mensaje="";
 		ModelMap model = new ModelMap();
 		
@@ -97,48 +109,56 @@ public class ControladorABMUsuario {
 	}
 	
 	@RequestMapping("/crear-texto")
-	public ModelAndView crearTxt(HttpServletRequest request){
-		ModelMap model = new ModelMap();
-		
-		Usuario usuario = new Usuario();
-		model.put("usuario", usuario);
-				
-		return new ModelAndView("vista-txt",model);
-	}
-	
-	@RequestMapping(path="/texto-ok", method= RequestMethod.POST)
-	public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
-		
-		ModelMap model = new ModelMap();
-		
-		Long usuarioId = (Long)request.getSession().getAttribute("id");
-	
-		System.out.println(usuarioId);
-		
-		
-		//String mensaje =(String) request.getSession().getAttribute("text");
-		String mensaje = usuario.getText();
-	//	Long usuarioId = usuario.getId();
-        try {
-            //Whatever the file path is.
-              File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+usuarioId+"_text.txt");
-         //   File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario_text_.txt");
-            FileOutputStream is = new FileOutputStream(statText);
-            OutputStreamWriter osw = new OutputStreamWriter(is);    
-            Writer w = new BufferedWriter(osw);
-            w.write(mensaje);
-            w.close();
-        } catch (IOException e) {
-            System.err.println("Problem writing to the file statsTest.txt");
-        }
-           
-		model.put("id",usuarioId);
-		model.put("mensaje",mensaje);
-		
-		return new ModelAndView("texto",model);
-	}
-	
+    public ModelAndView crearTxt(HttpServletRequest request){
+        ModelMap model = new ModelMap();
+             
+        Usuario usuario = new Usuario();
+        
+        model.put("usuario", usuario);
 
+        return new ModelAndView("vista-txt",model);
+    }
+
+	  @RequestMapping(path="/texto-ok", method= RequestMethod.POST)
+	  public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){	
+	  ModelMap model = new ModelMap();   
+	  String mensaje= usuario.getText();
+	  Long id = (Long) request.getSession().getAttribute("id");
+	  try {
+	  File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+id+"_text.txt");
+	  FileOutputStream is = new FileOutputStream(statText);
+	  OutputStreamWriter osw = new OutputStreamWriter(is);
+	  Writer w = new BufferedWriter(osw);
+	  w.write(mensaje);
+	  w.close();
+	  }catch (IOException e) {
+	  System.err.println("Problem writing to the file statsTest.txt");
+	  }
+	 model.put("id",id);
+	 model.put("mensaje",mensaje);
+	 return new ModelAndView("texto",model);
+	 }
+	  
+	@RequestMapping(path="/leer-file/{id}")
+	public ModelAndView leerFileTxt(@PathVariable Long id) throws IOException{
+		
+	ModelMap modelo = new ModelMap();		
+	StringBuilder sb = new StringBuilder();
+	try (BufferedReader br = Files.newBufferedReader(Paths.get("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+id+"_text.txt"))) {
+	String line;
+	
+    while ((line = br.readLine()) != null) {
+    sb.append(line).append("\n");}
+    
+    }catch(IOException e){
+    	
+    System.err.format("IOException: %s%n", e);}
+	
+	System.out.println(sb);
+	modelo.put("texto", sb);
+	return new ModelAndView("leer-file",modelo);
+	} 
+  
 	
 //	@RequestMapping("/crear-texto")
 //	public ModelAndView crearTexto(){
