@@ -18,7 +18,10 @@
 					<label>Password:</label>
 					<form:input path="password" id="password" type="password" class="form-control" />
 					<br><br>
+					<div class="g-recaptcha"
+					 data-sitekey="6Ld39acUAAAAABo_LFnh7g1cWFHtSIso36UMkHQ3"></div>
 					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Resetear Clave</button>
 				</form:form>
+				<script src="https://www.google.com/recaptcha/api.js"></script>	
 </body>
 </html>
