@@ -7,10 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h1>Bienvenido!</h1>
-	<h3>Se ha registrado con exito con su mail: ${usuario.email}</h3>
-	
-	<a href="http://localhost:8080/proyecto-limpio-spring/homeUser"> 
-	<button class="btn btn-lg btn-primary btn-block"/>Home</button> </a>	
+		<h1>${texto}</h1>
 </body>
 </html>

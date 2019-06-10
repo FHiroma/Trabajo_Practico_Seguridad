@@ -1,5 +1,9 @@
 package ar.edu.unlam.tallerweb1.dao;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -38,6 +42,22 @@ public class AdminDaoImpl implements AdminDao{
 		usuario.setEstado(false);
 		sessionFactory.getCurrentSession().update(usuario);
 		return usuario.getEmail();
+	}
+
+
+
+	@Override
+	public void leerTxt(StringBuilder sb, Long id) {
+			try (BufferedReader br = Files.newBufferedReader
+			(Paths.get("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+id+"_text.txt"))) {
+			String line;
+		
+		    while ((line = br.readLine()) != null) {
+     	    sb.append(line).append("\n");}
+		    
+		    }catch(IOException e){
+		    	
+		    System.err.format("IOException: %s%n", e);}
 	}
 
 	

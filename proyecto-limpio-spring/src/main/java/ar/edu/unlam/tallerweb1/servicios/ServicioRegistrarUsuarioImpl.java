@@ -35,7 +35,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		      try {
 		         // Apertura del fichero y creacion de BufferedReader para poder
 		    	 //Indico localización del txt a comparar
-		         commonPass = new File ("c://pass10000.txt");
+		         commonPass = new File ("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/pass10000.txt");
 		         fr = new FileReader (commonPass);
 		         br = new BufferedReader(fr);
 
@@ -44,7 +44,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		         String aux;
 		         while((linea=br.readLine())!=null){
 		            //Esta linea es para controlar por consola que se lea correctamente el archivo
-		        	 System.out.println(linea);
+		        	// System.out.println(linea);
 		        	 aux = linea;
 		        	
 		        	 //Valida que el pass no se encuentre en el archivo
