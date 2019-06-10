@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
+import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
@@ -46,6 +47,9 @@ public class ControladorABMUsuario {
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
 	@Inject
 	private ServicioLogin servicioLogin;
+	@Inject
+	private ServicioBMUsuario servicioCrearTxt;
+
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -124,181 +128,12 @@ public class ControladorABMUsuario {
 	  ModelMap model = new ModelMap();   
 	  String mensaje= usuario.getText();
 	  Long id = (Long) request.getSession().getAttribute("id");
-	  try {
-	  File statText = new File("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+id+"_text.txt");
-	  FileOutputStream is = new FileOutputStream(statText);
-	  OutputStreamWriter osw = new OutputStreamWriter(is);
-	  Writer w = new BufferedWriter(osw);
-	  w.write(mensaje);
-	  w.close();
-	  }catch (IOException e) {
-	  System.err.println("Problem writing to the file statsTest.txt");
+	  servicioCrearTxt.crearTxt(mensaje,id);
+	  model.put("id",id);
+	  model.put("mensaje",mensaje);
+	  return new ModelAndView("texto",model);
 	  }
-	 model.put("id",id);
-	 model.put("mensaje",mensaje);
-	 return new ModelAndView("texto",model);
-	 }
 	  
-	@RequestMapping(path="/leer-file/{id}")
-	public ModelAndView leerFileTxt(@PathVariable Long id) throws IOException{
-		
-	ModelMap modelo = new ModelMap();		
-	StringBuilder sb = new StringBuilder();
-	try (BufferedReader br = Files.newBufferedReader(Paths.get("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+id+"_text.txt"))) {
-	String line;
-	
-    while ((line = br.readLine()) != null) {
-    sb.append(line).append("\n");}
-    
-    }catch(IOException e){
-    	
-    System.err.format("IOException: %s%n", e);}
-	
-	System.out.println(sb);
-	modelo.put("texto", sb);
-	return new ModelAndView("leer-file",modelo);
-	} 
-  
-	
-//	@RequestMapping("/crear-texto")
-//	public ModelAndView crearTexto(){
-//		
-//	
-//			 
-//			  final String inputFilePath = "C:/Users/gabri/eclipse-mars-workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/store-file/output.txt";
-//			 
-//			  JFrame jFrame = new JFrame("Load ,Edit and Save file");
-//			 
-//			  Container content = jFrame.getContentPane();
-//			 
-//			  final JEditorPane edPane = new JEditorPane();
-//			 
-//			  JScrollPane sPne = new JScrollPane(edPane);
-//			 
-//			  content.add(sPne, BorderLayout.CENTER);
-//			 
-//			  edPane.setEditorKit(new HTMLEditorKit());
-//			 
-//			  JPanel jPanel = new JPanel();
-//			 
-//			  Action Load = new AbstractAction() {
-//			 
-//			@Override
-//			 
-//			public void actionPerformed(ActionEvent event) {
-//			 
-//			    try {
-//			 
-//			  load(edPane, inputFilePath);
-//			 
-//			    } catch (Exception e1) {
-//			 
-//			  e1.printStackTrace();
-//			 
-//			    }
-//			 
-//			}
-//			 
-//			  };
-//			 
-//			  Load.putValue(Action.NAME, "Load");
-//			 
-//			  JButton loadButton = new JButton(Load);
-//			 
-//			  jPanel.add(loadButton);
-//			 
-//			  Action absActionSave = new AbstractAction() {
-//			 
-//			@Override
-//			 
-//			public void actionPerformed(ActionEvent event) {
-//			 
-//			    try {
-//			 
-//			  save(edPane, inputFilePath);
-//			 
-//			    } catch (Exception e1) {
-//			 
-//			  e1.printStackTrace();
-//			 
-//			    }
-//			 
-//			}
-//			 
-//			  };
-//			 
-//			  absActionSave.putValue(Action.NAME, "Save");
-//			 
-//			  JButton jButton = new JButton(absActionSave);
-//			 
-//			  jPanel.add(jButton);
-//			 
-//			  Action absActionClear = new AbstractAction() {
-//			 
-//			@Override
-//			 
-//			public void actionPerformed(ActionEvent event) {
-//			 
-//			    edPane.setText("");
-//			 
-//			}
-//			 
-//			  };
-//			 
-//			  absActionClear.putValue(Action.NAME, "Clear");
-//			 
-//			  JButton clearButton = new JButton(absActionClear);
-//			 
-//			  jPanel.add(clearButton);
-//			 
-//			  content.add(jPanel, BorderLayout.SOUTH);
-//			 
-//			  jFrame.setSize(800, 600);
-//			 
-//			  jFrame.setVisible(true);
-//			    
-//			 
-//			  public static void save(JTextComponent text, String inputFile) throws Exception {
-//			 
-//			  FileWriter writer = null;
-//			 
-//			  writer = new FileWriter(inputFile);
-//			 
-//			  text.write(writer);
-//			 
-//			  writer.close();
-//			    }
-//			 
-//			    public static void load(JTextComponent text, String inputFile) throws Exception {
-//			 
-//			  FileReader inputReader = null;
-//			 
-//			  inputReader = new FileReader(inputFile);
-//			 
-//			  text.read(inputReader, inputFile);
-//			 
-//			  inputReader.close();
-//			 
-//			    }
-//			}
-//
-//	protected void save(JEditorPane edPane, String inputFilePath) {
-//		// TODO Auto-generated method stub
-//		
-//	}
-//
-//	protected void load(JEditorPane edPane, String inputFilePath) {
-//		// TODO Auto-generated method stub
-//		
-//	}
 
+	
 }
-
-
-
-
-
-
-
-
-

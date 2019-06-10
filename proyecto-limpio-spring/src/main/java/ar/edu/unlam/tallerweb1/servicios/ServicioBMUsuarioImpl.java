@@ -22,6 +22,9 @@ public class ServicioBMUsuarioImpl implements ServicioBMUsuario {
 	@Override
 	public void recuperarPassword(String email, String password) {
 		ServicioBMUsuarioDao.recuperarPassword(email, password);
-		
+	}
+	@Override
+	public void crearTxt(String mensaje,Long id){
+		ServicioBMUsuarioDao.crearTxt(mensaje,id);
 	}
 }

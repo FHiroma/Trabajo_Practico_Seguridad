@@ -10,6 +10,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -23,7 +24,10 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 public class ControladorAdmin {
 	@Inject
 	private ServicioAdmin servicioAdmin;
-	@Inject ServicioLog servicioLog;
+	@Inject 
+	private ServicioLog servicioLog;
+	@Inject
+	private ServicioAdmin servicioLeerTxt;
 
 	@RequestMapping("/listadoDeUsuarios")
 	public ModelAndView irAListadoDeUsuarios() {
@@ -67,4 +71,16 @@ public class ControladorAdmin {
 		modelo.put("lista", listado);
 		return new ModelAndView("historialDeActividad",modelo);
 	}
+	
+	@RequestMapping(path="/leer-file/{id}")
+	public ModelAndView leerFileTxt(@RequestParam ("id") Long id) {
+	ModelMap modelo = new ModelMap();		
+	List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
+	modelo.put("lista", lista);
+	StringBuilder sb = new StringBuilder();
+	servicioLeerTxt.leerTxt(sb,id);
+	System.out.println(sb);
+	modelo.put("texto", sb);
+	return new ModelAndView("leer-file",modelo);
+	} 
 }
