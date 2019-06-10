@@ -40,11 +40,14 @@ public class LogDaoImpl implements LogDao{
 		case "modificar-texto":
 			codigo = 4;
 			break;
-		case "recuperar-contraseña":
+		case "recuperar-contraseÃ±a":
 			codigo = 5;
 			break;
 		case "registrado":
 			codigo = 6;
+			break;
+		case "fallo-login":
+			codigo = 7;
 			break;
 		default:
 			codigo = 0;

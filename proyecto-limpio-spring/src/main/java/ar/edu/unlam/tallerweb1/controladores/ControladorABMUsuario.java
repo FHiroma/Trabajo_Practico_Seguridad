@@ -97,12 +97,11 @@ public class ControladorABMUsuario {
 	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
 	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
 		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
-		request.getSession().setAttribute("id", usuario.getId());
-		request.getSession().setAttribute("rol", usuario.getRol());
 		String mensaje="";
 		ModelMap model = new ModelMap();
-		
 		if(validarPass){
+			request.getSession().setAttribute("id", usuario.getId());
+			request.getSession().setAttribute("rol", usuario.getRol());
 			return new ModelAndView("homeUser");
 		}else{
 			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
