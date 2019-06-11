@@ -17,6 +17,7 @@ import java.util.Scanner;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,6 +33,7 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
+import ar.edu.unlam.tallerweb1.servicios.ServicioRecaptcha;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 
 @Controller
@@ -47,6 +49,8 @@ public class ControladorABMUsuario {
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
 	@Inject
 	private ServicioLogin servicioLogin;
+	@Inject
+	private ServicioRecaptcha servicioRecaptcha;
 	@Inject
 	private ServicioBMUsuario servicioCrearTxt;
 
@@ -80,9 +84,9 @@ public class ControladorABMUsuario {
 		String email= usuario.getEmail();
 		String password=usuario.getPassword();
 		servicioRecuperarPassword.recuperarPassword(email, password);
-		ModelMap model = new ModelMap();
+		ModelMap model = new ModelMap();	
 		model.put("password", "Actualizacion de contrase�a exitosa, Ingrese su usuario y su nueva clave");
-		
+				
 		return new ModelAndView("login", model);
 	}
 	
@@ -95,13 +99,17 @@ public class ControladorABMUsuario {
 	}
 	
 	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
-	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
+	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
 		String mensaje="";
+		
+		/* necesario para el captcha*/
+			boolean isHuman = servicioRecaptcha.checkRecaptcha(request);
+		/* Fin captcha */
+		
 		ModelMap model = new ModelMap();
-		if(validarPass){
-			request.getSession().setAttribute("id", usuario.getId());
-			request.getSession().setAttribute("rol", usuario.getRol());
+		
+		if(validarPass&&isHuman){
 			return new ModelAndView("homeUser");
 		}else{
 			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
