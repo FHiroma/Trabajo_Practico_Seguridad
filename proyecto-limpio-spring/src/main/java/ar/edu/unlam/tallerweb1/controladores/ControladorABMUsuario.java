@@ -1,20 +1,5 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.Scanner;
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -56,6 +41,10 @@ public class ControladorABMUsuario {
 	private ServicioToken servicioVerificarToken;
 	@Inject
 	private ServicioBMUsuario servicioCambiarClave;
+	@Inject 
+	private ServicioRecaptcha servicioRecaptcha;
+	@Inject 
+	private ServicioBMUsuario servicioCrearTxt;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -140,8 +129,6 @@ public class ControladorABMUsuario {
 									 @ModelAttribute ("password") String password){
 		servicioCambiarClave.cambiarClave(token, password);
 		return new ModelAndView("exito");
-	}
-        return new ModelAndView("vista-txt",model);
     }
 
 	  @RequestMapping(path="/texto-ok", method= RequestMethod.POST)
@@ -154,7 +141,4 @@ public class ControladorABMUsuario {
 	  model.put("mensaje",mensaje);
 	  return new ModelAndView("texto",model);
 	  }
-	  
-
-	
 }
