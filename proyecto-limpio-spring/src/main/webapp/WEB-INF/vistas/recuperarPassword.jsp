@@ -15,10 +15,7 @@
 					<label>Email:</label>
 					<form:input path="email" id="email" type="email" class="form-control" />
 					<br><br>
-					<label>Password:</label>
-					<form:input path="password" id="password" type="password" class="form-control" />
-					<br><br>
-					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Resetear Clave</button>
+					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Enviar Email</button>
 				</form:form>
 </body>
 </html>
