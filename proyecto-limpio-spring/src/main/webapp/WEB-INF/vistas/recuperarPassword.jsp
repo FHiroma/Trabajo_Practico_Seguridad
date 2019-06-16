@@ -15,7 +15,7 @@
 					<label>Email:</label>
 					<form:input path="email" id="email" type="email" class="form-control" />
 					<br><br>
-					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Enviar Email</button>
 				</form:form>
+				<script src="https://www.google.com/recaptcha/api.js"></script>	
 </body>
 </html>

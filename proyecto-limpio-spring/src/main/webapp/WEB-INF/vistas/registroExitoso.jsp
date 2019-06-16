@@ -11,6 +11,6 @@
 	<h3>Se ha registrado con exito con su mail: ${usuario.email}</h3>
 	
 	<a href="http://localhost:8080/proyecto-limpio-spring/homeUser"> 
-	<button>Home</button> </a>	
+	<button class="btn btn-lg btn-primary btn-block"/>Home</button> </a>	
 </body>
 </html>

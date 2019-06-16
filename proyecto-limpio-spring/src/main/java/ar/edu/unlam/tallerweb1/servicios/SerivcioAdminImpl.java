@@ -29,4 +29,8 @@ public class SerivcioAdminImpl implements ServicioAdmin{
 	public String desactivarUsuario(Long id) {
 		return servicioAdmin.desactivarUsuario(id);
 	}
+
+	@Override
+	public void leerTxt(StringBuilder sb, Long id) {
+	}
 }

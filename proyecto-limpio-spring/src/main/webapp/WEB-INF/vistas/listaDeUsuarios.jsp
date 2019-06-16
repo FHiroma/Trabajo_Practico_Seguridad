@@ -30,5 +30,10 @@
         </c:if>	
         <a href="http://localhost:8080/proyecto-limpio-spring/ver-historial?id=${usuario.id}"><button>Historial</button></a>
 </c:forEach>
+
+<c:forEach items="${lista}" var="usuario">
+	 <h4><a href="http://localhost:8080/proyecto-limpio-spring/vista-txt?id=${usuario.id}"><button>Ver TXT</button></a></h4>
+</c:forEach>
+
 </body>
 </html>

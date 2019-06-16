@@ -21,7 +21,9 @@
 					<%--Elementos de entrada de datos, el elemento path debe indicar en que atributo del objeto usuario se guardan los datos ingresados--%>
 					<form:input path="email" id="email" type="email" class="form-control" />
 					<form:input path="password" type="password" id="password" class="form-control"/>     		  
-					
+					<div class="g-recaptcha"
+					 data-sitekey="6Ld39acUAAAAABo_LFnh7g1cWFHtSIso36UMkHQ3"></div>
+				
 					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Login</button>
 				</form:form>
 		
@@ -52,5 +54,6 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js" ></script>
 		<script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
 		<script src="js/bootstrap.min.js" type="text/javascript"></script>
+			<script src="https://www.google.com/recaptcha/api.js"></script>	
 	</body>
 </html>

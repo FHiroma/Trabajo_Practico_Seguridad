@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
+import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 
 @Controller
@@ -23,6 +24,8 @@ public class ControladorLogin {
 	// @Service o @Repository y debe estar en un paquete de los indicados en applicationContext.xml
 	@Inject
 	private ServicioLogin servicioLogin;
+	@Inject
+	private ServicioLog servicioLog;
 	
 	// Este metodo escucha la URL localhost:8080/NOMBRE_APP/login si la misma es invocada por metodo http GET
 	@RequestMapping("/login")
@@ -51,11 +54,12 @@ public class ControladorLogin {
 			request.getSession().setAttribute("id", usuarioBuscado.getId());
 			request.getSession().setAttribute("rol", usuarioBuscado.getRol());
 			model.put("sesion", request);
-//			return new ModelAndView("redirect:/home");
 		if("user".equals(usuarioBuscado.getRol())){
+			servicioLog.guardarRegistro("login", usuarioBuscado.getId());
 			return new ModelAndView("redirect:/homeUser",model);
 			}
 		if("admin".equals(usuarioBuscado.getRol())){
+			servicioLog.guardarRegistro("login", usuarioBuscado.getId());
 			return new ModelAndView("redirect:/homeAdmin", model);
 			}
 		} else {
@@ -110,6 +114,7 @@ public class ControladorLogin {
 	public ModelAndView logout(HttpServletRequest request){
 		HttpSession session = request.getSession();
 		if( session != null){
+		servicioLog.guardarRegistro("logout", (Long)request.getSession().getAttribute("id"));
 		request.removeAttribute("id");
 		request.removeAttribute("rol");
 		session.invalidate();

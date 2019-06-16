@@ -5,6 +5,8 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import javax.inject.Inject;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.security.crypto.bcrypt.*;
 
 @Repository("registrarUsuarioDao")
