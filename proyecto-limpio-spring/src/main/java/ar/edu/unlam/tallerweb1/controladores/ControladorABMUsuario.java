@@ -130,15 +130,24 @@ public class ControladorABMUsuario {
 		servicioCambiarClave.cambiarClave(token, password);
 		return new ModelAndView("exito");
     }
+	
 
-	  @RequestMapping(path="/texto-ok", method= RequestMethod.POST)
-	  public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){	
-	  ModelMap model = new ModelMap();   
-	  String mensaje= usuario.getText();
-	  Long id = (Long) request.getSession().getAttribute("id");
-	  servicioCrearTxt.crearTxt(mensaje,id);
-	  model.put("id",id);
-	  model.put("mensaje",mensaje);
-	  return new ModelAndView("texto",model);
-	  }
+	@RequestMapping("/crear-texto")
+    public ModelAndView crearTxt(HttpServletRequest request){
+        ModelMap model = new ModelMap();   
+        Usuario usuario = new Usuario();
+        model.put("usuario", usuario);
+        return new ModelAndView("vista-txt",model);
+    }
+
+	@RequestMapping(path="/texto-ok", method= RequestMethod.POST)
+	public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){	
+		ModelMap model = new ModelMap();   
+		String mensaje= usuario.getText();
+		Long id = (Long) request.getSession().getAttribute("id");
+		servicioCrearTxt.crearTxt(mensaje,id);
+		model.put("id",id);
+		model.put("mensaje",mensaje);
+		return new ModelAndView("texto",model);
+	}
 }
