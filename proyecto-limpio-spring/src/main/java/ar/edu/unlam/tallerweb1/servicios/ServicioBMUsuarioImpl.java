@@ -41,8 +41,8 @@ public class ServicioBMUsuarioImpl implements ServicioBMUsuario {
 
 		      try {
 		         // Apertura del fichero y creacion de BufferedReader para poder
-		    	 //Indico localización del txt a comparar
-		         commonPass = new File ("C://Users/gabri/miau/Trabajo_Practico_Seguridad/pass10000.txt");
+		    	 //Indico localizaciï¿½n del txt a comparar
+		    	  commonPass = new File ("C:/Users/gabri/miau/Trabajo_Practico_Seguridad/pass10000.txt");
 		         
 		         fr = new FileReader (commonPass);
 		         br = new BufferedReader(fr);
@@ -92,5 +92,10 @@ public class ServicioBMUsuarioImpl implements ServicioBMUsuario {
 	@Override
 	public void crearTxt(String mensaje,Long id){
 		ServicioBMUsuarioDao.crearTxt(mensaje,id);
+	}
+
+	@Override
+	public Usuario recuperarUsuarioId(Long id) {
+		return ServicioBMUsuarioDao.recuperarUsuarioId(id);
 	}
 }

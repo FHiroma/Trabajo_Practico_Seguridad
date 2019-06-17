@@ -45,6 +45,10 @@ public class ControladorABMUsuario {
 	private ServicioRecaptcha servicioRecaptcha;
 	@Inject 
 	private ServicioBMUsuario servicioCrearTxt;
+	@Inject
+	private ServicioBMUsuario servicioRecuperarUsuarioId;
+	@Inject
+	private ServicioBMUsuario servicioCambiarClaveDeUsuario;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){

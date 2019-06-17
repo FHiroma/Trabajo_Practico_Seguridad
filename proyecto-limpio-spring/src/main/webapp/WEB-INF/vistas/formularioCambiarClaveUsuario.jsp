@@ -16,7 +16,7 @@
 
 					<%--Elementos de entrada de datos, el elemento path debe indicar en que atributo del objeto usuario se guardan los datos ingresados--%>
 					
-					<form name="token" id="token" type="text" value="${token}" class="form-control" />
+					<input name="token" id="token" type="hidden" value="${token}" class="form-control" />
 					
 					<label>Ingrese la password</label>
 					<input name="password" id="password" type="password" class="form-control"/>     		  

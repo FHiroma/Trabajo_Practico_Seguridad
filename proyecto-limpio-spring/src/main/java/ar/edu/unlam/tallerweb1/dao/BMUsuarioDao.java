@@ -7,4 +7,5 @@ public interface BMUsuarioDao {
 	Usuario verificarUsuarioEmail(String mail);
 	Boolean cambiarClave(String token,String password);
 	void crearTxt(String mensaje, Long id);
+	Usuario recuperarUsuarioId(Long id);
 }
