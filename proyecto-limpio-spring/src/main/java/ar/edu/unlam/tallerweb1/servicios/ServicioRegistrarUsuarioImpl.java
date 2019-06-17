@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+
 import javax.inject.Inject;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,6 +35,8 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		      try {
 		         // Apertura del fichero y creacion de BufferedReader para poder
 		    	 //Indico localización del txt a comparar
+		    	 //C:\Users\gabri\miau\Trabajo_Practico_Seguridad\pass10000.txt
+		    	 commonPass = new File ("C:/Users/gabri/miau/Trabajo_Practico_Seguridad/pass10000.txt");
 		         fr = new FileReader (commonPass);
 		         br = new BufferedReader(fr);
 
@@ -42,7 +45,8 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		         String aux;
 		         while((linea=br.readLine())!=null){
 		            //Esta linea es para controlar por consola que se lea correctamente el archivo
-		        	 System.out.println(linea);		        	 aux = linea;
+		        	// System.out.println(linea);
+		        	 aux = linea;
 		        	
 		        	 //Valida que el pass no se encuentre en el archivo
     	        	 if(aux.equals(pass)){
