@@ -133,9 +133,9 @@ public class ControladorABMUsuario {
 			modelo.put("token", token);
 			return new ModelAndView("formularioCambiarClaveUsuario",modelo);
 		}else{
-			PasswordResetToken t=servicioVerificarToken.recuperarUsuarioConToken(token);
+			Usuario usuario =servicioVerificarToken.recuperarUsuarioConToken(token);
 			ModelMap modelo= new ModelMap();
-			modelo.put("token", t);
+			modelo.put("usuario", usuario);
 			modelo.put("error", "Token expirado");
 			return new ModelAndView("vistaTokenExpirado",modelo);
 		}
@@ -145,6 +145,8 @@ public class ControladorABMUsuario {
 	public ModelAndView cambiarClave(@ModelAttribute ("token") String token,
 									 @ModelAttribute ("password") String password){
 		servicioCambiarClave.cambiarClave(token, password);
+		Usuario usuario =servicioVerificarToken.recuperarUsuarioConToken(token);
+		servicioEnviarMail.send(usuario.getEmail(), "Cambio de clave", "Se ha cambiado la clave de su cuenta" + usuario.getEmail());
 		ModelMap modelo= new ModelMap();
 		modelo.put("error", "Cambio de clave correcto!."
 				+ "Vuelva a introducir sus datos para iniciar sesion");

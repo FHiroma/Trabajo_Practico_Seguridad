@@ -25,7 +25,7 @@ public class ServicioTokenImpl implements ServicioToken {
 	}
 
 	@Override
-	public PasswordResetToken recuperarUsuarioConToken(String token) {
+	public Usuario recuperarUsuarioConToken(String token) {
 		return servicioTokenDao.recuperarUsuarioConToken(token);
 	}
 

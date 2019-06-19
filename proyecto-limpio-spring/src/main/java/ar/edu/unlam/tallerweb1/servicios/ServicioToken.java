@@ -6,5 +6,5 @@ import ar.edu.unlam.tallerweb1.modelo.Usuario;
 public interface ServicioToken {
 	PasswordResetToken crearToken(Usuario u);
 	Boolean verificarToken(String token);
-	PasswordResetToken recuperarUsuarioConToken(String token);
+	Usuario recuperarUsuarioConToken(String token);
 }

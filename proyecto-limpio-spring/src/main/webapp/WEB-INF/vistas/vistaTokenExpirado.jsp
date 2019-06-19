@@ -8,6 +8,6 @@
 </head>
 <body>	
 	<h1>${error}</h1>
-	<h2>Usuario de Email: ${token.usuario.email}</h2>
+	<h2>Usuario de Email: ${usuario.email}</h2>
 </body>
 </html>

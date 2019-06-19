@@ -40,12 +40,17 @@ public class TokenDaoImpl implements TokenDao{
 		}
 
 	@Override
-	public PasswordResetToken recuperarUsuarioConToken(String token) {
+	public Usuario recuperarUsuarioConToken(String token) {
 		 PasswordResetToken tokenTabla= (PasswordResetToken) sessionFactory.getCurrentSession()
 					.createCriteria(PasswordResetToken.class)
 					.add(Restrictions.eq("token", token))
 					.uniqueResult();
-		 return tokenTabla;
+		 Long id = tokenTabla.getUsuario().getId();
+		 Usuario usuario = (Usuario) sessionFactory.getCurrentSession()
+				 .createCriteria(Usuario.class)
+				 .add(Restrictions.eq("id", id))
+				 .uniqueResult();
+		 return usuario;
 	}
 }
 
