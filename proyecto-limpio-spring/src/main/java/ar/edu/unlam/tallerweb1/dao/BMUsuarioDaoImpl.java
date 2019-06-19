@@ -81,5 +81,4 @@ public class BMUsuarioDaoImpl implements BMUsuarioDao {
 				.uniqueResult();
 		return u;
 	}
-
 }

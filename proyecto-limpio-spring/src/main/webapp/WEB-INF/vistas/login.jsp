@@ -46,6 +46,10 @@
 		        <c:if test="${not empty errorRegistro}">
 			        <h4><span>${errorRegistro}</span></h4>
 			        <br>
+		        </c:if>
+		        <c:if test="${not empty mensaje}">
+			        <h4><span>${mensaje}</span></h4>
+			        <br>
 		        </c:if>		
 			</div>
 		</div>

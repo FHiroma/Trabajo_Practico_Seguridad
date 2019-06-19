@@ -94,8 +94,7 @@ public class ControladorABMUsuario {
 			modelo.put("error", "No existe usuario con ese Email");
 			return new ModelAndView("exito", modelo);
 		}
-}
-	
+	}
 	
 	@RequestMapping("/registro")
 	public ModelAndView registrarUsuario(){	
@@ -144,10 +143,12 @@ public class ControladorABMUsuario {
 	public ModelAndView cambiarClave(@ModelAttribute ("token") String token,
 									 @ModelAttribute ("password") String password){
 		servicioCambiarClave.cambiarClave(token, password);
-		return new ModelAndView("exito");
+		ModelMap modelo= new ModelMap();
+		modelo.put("error", "Cambio de clave correcto!."
+				+ "Vuelva a introducir sus datos para iniciar sesion");
+		return new ModelAndView("redirect:/login",modelo);
     }
 	
-
 	@RequestMapping("/crear-texto")
     public ModelAndView crearTxt(HttpServletRequest request){
         ModelMap model = new ModelMap();   
