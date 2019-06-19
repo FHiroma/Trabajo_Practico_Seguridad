@@ -24,5 +24,8 @@
 					<br><br>
 					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Modificar</button>
 	</form:form>
+	
+	<a href="http://localhost:8080/proyecto-limpio-spring/actualizar-password"> 
+				<h3 class="form-signin-heading">Actualizar Contraseña</h3> </a>
 </body>
 </html>

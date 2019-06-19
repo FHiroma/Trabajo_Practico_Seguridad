@@ -52,6 +52,8 @@ public class ControladorABMUsuario {
 	private ServicioBMUsuario servicioCambiarClaveDeUsuario;
 	@Inject
 	private EmailService servicioEnviarMail;
+	@Inject
+	private ServicioBMUsuario servicioRecuperarUsuarioConIdYPassword;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -167,4 +169,26 @@ public class ControladorABMUsuario {
 		model.put("mensaje",mensaje);
 		return new ModelAndView("texto",model);
 	}
+	
+	@RequestMapping("/actualizar-password")
+	public ModelAndView actuzalizarPassword(){	
+		return new ModelAndView("vista-formulario-cambiar-clave-logeado");
+	}
+	
+	@RequestMapping("/cambiar-clave-logeado")
+	public ModelAndView cambiarClaveUsuarioLogeado(@ModelAttribute ("password") String password
+												   , @ModelAttribute ("nvopass") String password1
+												   , @ModelAttribute ("repeticion") String password2
+												   , HttpServletRequest request){
+		Long id = (Long) request.getSession().getAttribute("id");
+		Usuario usuario = servicioRecuperarUsuarioConIdYPassword.recuperarUsuarioConIdYPassword(id, password);
+		System.out.println(usuario.getEmail());
+		if(password1.equals(password2)){
+			servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
+		}
+		return new ModelAndView("cambio-password-logeado");
+	}
+	
+	
+	
 }

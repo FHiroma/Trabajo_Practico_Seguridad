@@ -7,4 +7,6 @@ public interface ServicioBMUsuario {
 	Boolean cambiarClave(String token,String password);
 	void crearTxt(String mensaje,Long id);
 	Usuario recuperarUsuarioId(Long id);
+	Usuario recuperarUsuarioConIdYPassword(Long id, String password);
+	void cambiarClaveDeUsuario(Usuario usuario, String password1);
 }

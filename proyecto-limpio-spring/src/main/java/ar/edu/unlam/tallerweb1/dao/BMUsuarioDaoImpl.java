@@ -81,4 +81,31 @@ public class BMUsuarioDaoImpl implements BMUsuarioDao {
 				.uniqueResult();
 		return u;
 	}
+
+	@Override
+	public Usuario recuperarUsuarioConIdYPassword(Long id, String password) {;
+		Usuario usuario= (Usuario) sessionFactory.getCurrentSession()
+				.createCriteria(Usuario.class)
+				.add(Restrictions.eq("id", id))
+				.uniqueResult();
+		if(usuario != null){
+			if(BCrypt.checkpw(password, usuario.getPassword())){
+				return usuario;
+			}else{
+				return null;
+			}
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public void cambiarClaveDeUsuario(Usuario usuario, String password1) {
+		Usuario u= (Usuario) sessionFactory.getCurrentSession()
+				.createCriteria(Usuario.class)
+				.add(Restrictions.eq("id", usuario.getId()))
+				.uniqueResult();
+		u.setPassword(BCrypt.hashpw(password1, BCrypt.gensalt()));
+		sessionFactory.getCurrentSession().update(u);
+	}
 }

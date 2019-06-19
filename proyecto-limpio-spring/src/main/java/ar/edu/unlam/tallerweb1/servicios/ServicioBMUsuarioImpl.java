@@ -98,4 +98,14 @@ public class ServicioBMUsuarioImpl implements ServicioBMUsuario {
 	public Usuario recuperarUsuarioId(Long id) {
 		return ServicioBMUsuarioDao.recuperarUsuarioId(id);
 	}
+
+	@Override
+	public Usuario recuperarUsuarioConIdYPassword(Long id, String password) {
+		return ServicioBMUsuarioDao.recuperarUsuarioConIdYPassword(id, password);
+	}
+
+	@Override
+	public void cambiarClaveDeUsuario(Usuario usuario, String password1) {
+		ServicioBMUsuarioDao.cambiarClaveDeUsuario(usuario, password1);
+	}
 }
