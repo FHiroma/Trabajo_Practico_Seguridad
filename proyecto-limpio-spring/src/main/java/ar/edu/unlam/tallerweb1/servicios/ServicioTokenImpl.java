@@ -20,7 +20,13 @@ public class ServicioTokenImpl implements ServicioToken {
 	}
 
 	@Override
-	public void verificarToken(Long id, String token) {
-		servicioTokenDao.verificarToken(id, token);
+	public Boolean verificarToken(String token) {
+		return servicioTokenDao.verificarToken(token);
 	}
+
+	@Override
+	public PasswordResetToken recuperarUsuarioConToken(String token) {
+		return servicioTokenDao.recuperarUsuarioConToken(token);
+	}
+
 }

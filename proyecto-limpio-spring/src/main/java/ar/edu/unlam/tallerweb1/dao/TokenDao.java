@@ -5,5 +5,6 @@ import ar.edu.unlam.tallerweb1.modelo.Usuario;
 
 public interface TokenDao {
 	PasswordResetToken crearToken(Usuario u);
-	void verificarToken(Long id, String token);
+	Boolean verificarToken(String token);
+	PasswordResetToken recuperarUsuarioConToken(String token);
 }

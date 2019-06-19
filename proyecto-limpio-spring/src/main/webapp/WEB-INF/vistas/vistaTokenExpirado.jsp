@@ -6,9 +6,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Insert title here</title>
 </head>
-<body>
+<body>	
 	<h1>${error}</h1>
-	<h1>${exito} ${usuario.email} </h1>
-
+	<h2>Usuario de Email: ${token.usuario.email}</h2>
 </body>
 </html>

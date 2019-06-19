@@ -10,6 +10,8 @@
 <body>
 	<h2>Ingrese su nueva Contraseña</h2>
 	
+	<h1>${error}</h1>
+	
 	<form action="cambiar-clave" method="POST">
 			    	<h3 class="form-signin-heading">Seguridad de Aplicaciones</h3>
 					<hr class="colorgraph"><br>

@@ -35,7 +35,7 @@ public class ControladorABMUsuario {
 	@Inject
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
 	@Inject 
-	private ServicioBMUsuario servicioVerificarUsuario;
+	private ServicioBMUsuario servicioVerificarEmailUsuario;
 	@Inject
 	private ServicioToken servicioCrearToken;
 	@Inject
@@ -79,22 +79,23 @@ public class ControladorABMUsuario {
 	
 	@RequestMapping(path="/validar-email", method = RequestMethod.POST)
 	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario){
-		
 		String mail= usuario.getEmail();
-		Usuario u=servicioVerificarUsuario.verificarUsuarioEmail(mail);
-		if(u!=null){
+		Usuario u=servicioVerificarEmailUsuario.verificarUsuarioEmail(mail);
+		if(u != null){
 			PasswordResetToken token=servicioCrearToken.crearToken(u);
 			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
-					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?id="+token.getUsuario().getId()+"&&token="+token.getToken());
+					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken());
 			ModelMap modelo = new ModelMap();
 			modelo.put("usuario", u);
+			modelo.put("exito", "Solicitud de cambio de contraseña Usuario:");
 			return new ModelAndView("exito", modelo);
-		}else{
-			ModelMap model = new ModelMap();
-			model.put("mensaje", "No hay usuario registrado con ese mail");
-			return new ModelAndView("exito", model);
+		} else {
+			ModelMap modelo= new ModelMap();
+			modelo.put("error", "No existe usuario con ese Email");
+			return new ModelAndView("exito", modelo);
 		}
-	}
+}
+	
 	
 	@RequestMapping("/registro")
 	public ModelAndView registrarUsuario(){	
@@ -124,12 +125,19 @@ public class ControladorABMUsuario {
 	}
 	
 	@RequestMapping("/solicitar-cambio-clave")
-	public ModelAndView solicitarCambioClave(@RequestParam ("id") Long id,
-											 @RequestParam ("token") String token){
-		servicioVerificarToken.verificarToken(id,token);
-		ModelMap modelo= new ModelMap();
-		modelo.put("token", token);
-		return new ModelAndView("formularioCambiarClaveUsuario",modelo);
+	public ModelAndView solicitarCambioClave(@RequestParam ("token") String token){
+		Boolean verificarToken=servicioVerificarToken.verificarToken(token);
+		if(verificarToken==true){
+			ModelMap modelo= new ModelMap();
+			modelo.put("token", token);
+			return new ModelAndView("formularioCambiarClaveUsuario",modelo);
+		}else{
+			PasswordResetToken t=servicioVerificarToken.recuperarUsuarioConToken(token);
+			ModelMap modelo= new ModelMap();
+			modelo.put("token", t);
+			modelo.put("error", "Token expirado");
+			return new ModelAndView("vistaTokenExpirado",modelo);
+		}
 	}
 	
 	@RequestMapping(path="/cambiar-clave", method = RequestMethod.POST)
