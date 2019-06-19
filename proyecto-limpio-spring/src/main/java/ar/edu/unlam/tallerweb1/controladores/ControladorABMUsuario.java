@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import ar.edu.unlam.tallerweb1.modelo.PasswordResetToken;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
+import ar.edu.unlam.tallerweb1.servicios.EmailService;
 import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
@@ -49,6 +50,8 @@ public class ControladorABMUsuario {
 	private ServicioBMUsuario servicioRecuperarUsuarioId;
 	@Inject
 	private ServicioBMUsuario servicioCambiarClaveDeUsuario;
+	@Inject
+	private EmailService servicioEnviarMail;
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -81,10 +84,11 @@ public class ControladorABMUsuario {
 		Usuario u=servicioVerificarUsuario.verificarUsuarioEmail(mail);
 		if(u!=null){
 			PasswordResetToken token=servicioCrearToken.crearToken(u);
+			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
+					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?id="+token.getUsuario().getId()+"&&token="+token.getToken());
 			ModelMap modelo = new ModelMap();
-			modelo.put("mensaje", "Se Creo Correctamente Token");
-			modelo.put("token", token);
-			return new ModelAndView("mailRecuperarPassword",modelo);
+			modelo.put("usuario", u);
+			return new ModelAndView("exito", modelo);
 		}else{
 			ModelMap model = new ModelMap();
 			model.put("mensaje", "No hay usuario registrado con ese mail");

@@ -7,7 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<h3>cambio de clave correcto</h3>
+	<h1>Usuario: ${usuario.email} solicitud de cambio de clave enviado</h1>
 
 </body>
 </html>
