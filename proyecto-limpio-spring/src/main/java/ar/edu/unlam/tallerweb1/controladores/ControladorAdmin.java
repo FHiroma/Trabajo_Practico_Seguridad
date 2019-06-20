@@ -72,14 +72,13 @@ public class ControladorAdmin {
 		return new ModelAndView("historialDeActividad",modelo);
 	}
 	
-	@RequestMapping(path="/leer-file/{id}")
+	@RequestMapping(path="/leer-file")
 	public ModelAndView leerFileTxt(@RequestParam ("id") Long id) {
 	ModelMap modelo = new ModelMap();		
-	List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
-	modelo.put("lista", lista);
+	//List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
+	//modelo.put("lista", lista);
 	StringBuilder sb = new StringBuilder();
 	servicioLeerTxt.leerTxt(sb,id);
-	System.out.println(sb);
 	modelo.put("texto", sb);
 	return new ModelAndView("leer-file",modelo);
 	} 

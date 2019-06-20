@@ -47,18 +47,22 @@ public class AdminDaoImpl implements AdminDao{
 
 
 	@Override
-	public void leerTxt(StringBuilder sb, Long id) {
+	public StringBuilder leerTxt(StringBuilder sb, Long id) {
+			//StringBuilder sb = new StringBuilder();
 			try (BufferedReader br = Files.newBufferedReader
 			(Paths.get("C:/Users/gonza/workspace/Trabajo_Practico_Seguridad/proyecto-limpio-spring/textos/usuario"+id+"_text.txt"))) {
 			String line;
 		
 		    while ((line = br.readLine()) != null) {
-     	    sb.append(line).append("\n");}
+		    sb.append(line).append("\n");}
 		    
 		    }catch(IOException e){
 		    	
 		    System.err.format("IOException: %s%n", e);}
+			//System.out.println(sb);
+			return sb;
 	}
-
+	
+		
 	
 }
