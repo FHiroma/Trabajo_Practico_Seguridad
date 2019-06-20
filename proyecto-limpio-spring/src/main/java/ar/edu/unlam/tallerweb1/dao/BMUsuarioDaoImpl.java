@@ -105,7 +105,7 @@ public class BMUsuarioDaoImpl implements BMUsuarioDao {
 				.createCriteria(Usuario.class)
 				.add(Restrictions.eq("id", usuario.getId()))
 				.uniqueResult();
-		u.setPassword(BCrypt.hashpw(password1, BCrypt.gensalt()));
+		u.setPassword(BCrypt.hashpw(password1, usuario.getSalt()));
 		sessionFactory.getCurrentSession().update(u);
 	}
 }

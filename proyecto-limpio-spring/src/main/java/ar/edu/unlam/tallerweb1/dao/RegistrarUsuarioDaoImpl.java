@@ -25,7 +25,8 @@ public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
 		if(listaUsuario.isEmpty()){
 			usuario.setRol("user");
 			usuario.setEstado(true);
-			usuario.setPassword(BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt()));
+			usuario.setSalt();
+			usuario.setPassword(BCrypt.hashpw(usuario.getPassword(), usuario.getSalt()));
 			sessionFactory.getCurrentSession().save(usuario);
 			return true;
 		}else{

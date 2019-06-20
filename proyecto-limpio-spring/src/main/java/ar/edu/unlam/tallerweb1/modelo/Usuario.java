@@ -1,12 +1,14 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
-import java.io.File;
+import java.util.Random;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
+import org.springframework.security.crypto.bcrypt.BCrypt;
 
 // Clase que modela el concepto de Usuario, la anotacion @Entity le avisa a hibernate que esta clase es persistible
 // el paquete ar.edu.unlam.tallerweb1.modelo esta indicado en el archivo hibernateCOntext.xml para que hibernate
@@ -28,6 +30,15 @@ public class Usuario {
 	private String apellido;
 	private Boolean estado;
 	private String text;
+	private String salt;
+	public String getSalt() {
+		return salt;
+	}
+	public void setSalt() {
+		Random numero = new Random();
+		int rondas=numero.nextInt(31-13+1)+13;
+		this.salt=BCrypt.gensalt(rondas);
+	}
 	public Long getId() {
 		return id;
 	}

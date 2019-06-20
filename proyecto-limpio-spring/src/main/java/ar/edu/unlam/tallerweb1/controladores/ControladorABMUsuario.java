@@ -3,6 +3,7 @@ package ar.edu.unlam.tallerweb1.controladores;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.JLabel;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -23,7 +24,7 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRecaptcha;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioToken;
-
+import static j2html.TagCreator.*;
 
 @Controller
 public class ControladorABMUsuario {
@@ -87,6 +88,7 @@ public class ControladorABMUsuario {
 			PasswordResetToken token=servicioCrearToken.crearToken(u);
 			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
 					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken());
+//			a("Enlace").withHref("http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken())
 			ModelMap modelo = new ModelMap();
 			modelo.put("usuario", u);
 			modelo.put("exito", "Solicitud de cambio de contraseña Usuario:");

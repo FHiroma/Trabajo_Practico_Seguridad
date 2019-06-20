@@ -56,7 +56,7 @@ public class EmailServiceImpl implements EmailService {
 	public void send(String to, String subject, String text) {
 		send(to, subject, text, NO_ATTACHMENTS);
 	}
- 
+	
 	/** envío de email con attachments
 	 * @param to correo electrónico del destinatario
 	 * @param subject asunto del mensaje
@@ -107,5 +107,5 @@ public class EmailServiceImpl implements EmailService {
 		// el envío
 		this.mailSender.send(message);
 	}
- 
+
 }
