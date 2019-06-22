@@ -25,9 +25,12 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioRecaptcha;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioToken;
 import static j2html.TagCreator.*;
+import org.apache.log4j.*;
 
 @Controller
 public class ControladorABMUsuario {
+	
+	final static Logger logger = Logger.getLogger(ControladorABMUsuario.class); 
 	
 	@Inject
 	private ServicioBMUsuario servicioModificacionUsuario;
@@ -83,8 +86,12 @@ public class ControladorABMUsuario {
 	@RequestMapping(path="/validar-email", method = RequestMethod.POST)
 	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario){
 		String mail= usuario.getEmail();
+		if(mail.equals(null)){
+			logger.info("Campo Mail vacio");
+		}
 		Usuario u=servicioVerificarEmailUsuario.verificarUsuarioEmail(mail);
 		if(u != null){
+			logger.info("ValidarEmail:" + usuario.toString());
 			PasswordResetToken token=servicioCrearToken.crearToken(u);
 			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
 					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken());
@@ -94,6 +101,7 @@ public class ControladorABMUsuario {
 			modelo.put("exito", "Solicitud de cambio de contraseña Usuario:");
 			return new ModelAndView("exito", modelo);
 		} else {
+			logger.warn("NO ValidarEmail:" + usuario.toString());
 			ModelMap modelo= new ModelMap();
 			modelo.put("error", "No existe usuario con ese Email");
 			return new ModelAndView("exito", modelo);
@@ -111,6 +119,7 @@ public class ControladorABMUsuario {
 	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
 	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
+		logger.info("Se ha registrado el Usuario:" +usuario.toString());
 		String mensaje="";
 		
 		/* necesario para el captcha*/
@@ -119,8 +128,9 @@ public class ControladorABMUsuario {
 		
 		ModelMap model = new ModelMap();
 		if(validarPass&&isHuman){
-			return new ModelAndView("homeUser");
+			return new ModelAndView("redirect:/login");
 		}else{
+			logger.warn("No valida password" + usuario.toString());
 			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
 			model.put("mensaje", mensaje);
 			return new ModelAndView("registrarUsuario", model);
@@ -133,12 +143,14 @@ public class ControladorABMUsuario {
 		if(verificarToken==true){
 			ModelMap modelo= new ModelMap();
 			modelo.put("token", token);
+			logger.info("Token OK:" + token.toString());
 			return new ModelAndView("formularioCambiarClaveUsuario",modelo);
 		}else{
 			Usuario usuario =servicioVerificarToken.recuperarUsuarioConToken(token);
 			ModelMap modelo= new ModelMap();
 			modelo.put("usuario", usuario);
 			modelo.put("error", "Token expirado");
+			logger.info("Token expirado:" + token.toString());
 			return new ModelAndView("vistaTokenExpirado",modelo);
 		}
 	}
@@ -184,9 +196,18 @@ public class ControladorABMUsuario {
 												   , @ModelAttribute ("nvopass") String password1
 												   , @ModelAttribute ("repeticion") String password2
 												   , HttpServletRequest request){
+		if(password.equals(null)){
+			logger.warn("Campo Password:" + "cambiarClaveUsuarioLogeado");
+		}
+		if(password1.equals(null)){
+			logger.warn("Campo nvopass:" + "cambiarClaveUsuarioLogeado");
+		}
+		if(password2.equals(null)){
+			logger.warn("Campo repeticion:" + "cambiarClaveUsuarioLogeado");
+		}
 		Long id = (Long) request.getSession().getAttribute("id");
 		Usuario usuario = servicioRecuperarUsuarioConIdYPassword.recuperarUsuarioConIdYPassword(id, password);
-		System.out.println(usuario.getEmail());
+		logger.info("Usuario validado:" + usuario.toString());
 		if(password1.equals(password2)){
 			servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
 		}

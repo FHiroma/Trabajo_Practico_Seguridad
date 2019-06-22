@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,16 +19,23 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.unlam.tallerweb1.modelo.Log;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
+import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
 @Controller
 public class ControladorAdmin {
+	
+	final static Logger logger = Logger.getLogger(ControladorAdmin.class); 
+	
 	@Inject
 	private ServicioAdmin servicioAdmin;
 	@Inject 
 	private ServicioLog servicioLog;
 	@Inject
 	private ServicioAdmin servicioLeerTxt;
+	@Inject
+	private ServicioBMUsuario servicioRecuperarUsuarioConId;
+	
 
 	@RequestMapping("/listadoDeUsuarios")
 	public ModelAndView irAListadoDeUsuarios() {
@@ -41,6 +49,8 @@ public class ControladorAdmin {
 	public ModelAndView activarAUnUsuario(@RequestParam ("id") Long id){
 		ModelMap modelo = new ModelMap();
 		String email = servicioAdmin.activarUsuario(id);
+		Usuario usuario= servicioRecuperarUsuarioConId.recuperarUsuarioId(id);
+		logger.info("Usuario activado:" + usuario.toString());
 		modelo.put("mensaje1", email);
 		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
 		modelo.put("lista", lista);
@@ -50,6 +60,8 @@ public class ControladorAdmin {
 	public ModelAndView desactivarAUnUsuario(@RequestParam ("id") Long id){
 		ModelMap modelo = new ModelMap();
 		String email = servicioAdmin.desactivarUsuario(id);
+		Usuario usuario= servicioRecuperarUsuarioConId.recuperarUsuarioId(id);
+		logger.info("Usuario desactivado:" + usuario.toString());
 		modelo.put("mensaje2", email);
 		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
 		modelo.put("lista", lista);
@@ -79,7 +91,6 @@ public class ControladorAdmin {
 	modelo.put("lista", lista);
 	StringBuilder sb = new StringBuilder();
 	servicioLeerTxt.leerTxt(sb,id);
-	System.out.println(sb);
 	modelo.put("texto", sb);
 	return new ModelAndView("leer-file",modelo);
 	} 

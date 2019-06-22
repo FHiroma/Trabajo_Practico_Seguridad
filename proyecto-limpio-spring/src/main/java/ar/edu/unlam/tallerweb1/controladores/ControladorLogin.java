@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,6 +19,8 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 
 @Controller
 public class ControladorLogin {
+	
+	final static Logger logger = Logger.getLogger(ControladorLogin.class);
 
 	// La anotacion @Inject indica a Spring que en este atributo se debe setear (inyeccion de dependencias)
 	// un objeto de una clase que implemente la interface ServicioLogin, dicha clase debe estar anotada como
@@ -55,15 +58,18 @@ public class ControladorLogin {
 			request.getSession().setAttribute("rol", usuarioBuscado.getRol());
 			model.put("sesion", request);
 		if("user".equals(usuarioBuscado.getRol())){
+			logger.info("Usuario logeado:" + usuarioBuscado.toString());
 			servicioLog.guardarRegistro("login", usuarioBuscado.getId());
 			return new ModelAndView("redirect:/homeUser",model);
 			}
 		if("admin".equals(usuarioBuscado.getRol())){
+			logger.info("Admin logeado:" + usuarioBuscado.toString());
 			servicioLog.guardarRegistro("login", usuarioBuscado.getId());
 			return new ModelAndView("redirect:/homeAdmin", model);
 			}
 		} else {
 			// si el usuario no existe agrega un mensaje de error en el modelo.
+			logger.warn("No exite usuario:" + usuario.toString());
 			model.put("error", "Usuario o clave incorrecta");
 		}
 		return new ModelAndView("login", model);
