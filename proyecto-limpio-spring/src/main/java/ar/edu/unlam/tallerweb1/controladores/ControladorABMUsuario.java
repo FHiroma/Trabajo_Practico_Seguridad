@@ -15,9 +15,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -36,6 +38,8 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 
 @Controller
 public class ControladorABMUsuario {
+	
+	final static Logger logger = Logger.getLogger(ControladorABMUsuario.class);
 	
 	@Inject
 	private ServicioBMUsuario servicioModificacionUsuario;
@@ -63,7 +67,7 @@ public class ControladorABMUsuario {
 	public ModelAndView modificarDatosUsuario(@ModelAttribute("usuario") Usuario usuario , HttpServletRequest request){
 		Long id=(Long)request.getSession().getAttribute("id");
 		servicioModificacionUsuario.modificarUsuario(id, usuario);
-		servicioLog.guardarRegistro("modificar-datos", id);
+		servicioLog.guardarRegistro("modificar-datos", id);	
 		return new ModelAndView("mensajeActualizacion");
 	}
 	
@@ -82,12 +86,12 @@ public class ControladorABMUsuario {
 		servicioRecuperarPassword.recuperarPassword(email, password);
 		ModelMap model = new ModelMap();
 		model.put("password", "Actualizacion de contrase�a exitosa, Ingrese su usuario y su nueva clave");
-		
 		return new ModelAndView("login", model);
 	}
 	
 	@RequestMapping("/registro")
-	public ModelAndView registrarUsuario(){	
+	public ModelAndView registrarUsuario(HttpServletRequest request){	
+		logger.info("Solicitud registrar usuario. Usuario");
 		ModelMap modelo = new ModelMap();
 		Usuario usuario = new Usuario();
 		modelo.put("usuario", usuario);
@@ -103,10 +107,12 @@ public class ControladorABMUsuario {
 		ModelMap model = new ModelMap();
 		
 		if(validarPass){
+			logger.info("El usuario se registró correctamente");
 			return new ModelAndView("homeUser");
 		}else{
 			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
 			model.put("mensaje", mensaje);
+			logger.warn("El usuario no se pudo registrar correctamente"+mensaje); 
 			return new ModelAndView("registrarUsuario", model);
 		}
 			
@@ -119,7 +125,7 @@ public class ControladorABMUsuario {
         Usuario usuario = new Usuario();
         
         model.put("usuario", usuario);
-
+        
         return new ModelAndView("vista-txt",model);
     }
 

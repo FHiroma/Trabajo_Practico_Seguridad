@@ -15,6 +15,8 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
 @Controller
 public class ControladorUser {
+	
+	
 	@Inject
 	private ServicioLog servicioLog;
 	

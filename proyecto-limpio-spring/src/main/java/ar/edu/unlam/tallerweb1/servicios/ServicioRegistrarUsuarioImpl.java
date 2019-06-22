@@ -6,14 +6,20 @@ import java.io.FileReader;
 import java.io.IOException;
 
 import javax.inject.Inject;
+
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import ar.edu.unlam.tallerweb1.controladores.ControladorLogin;
 import ar.edu.unlam.tallerweb1.dao.RegistrarUsuarioDao;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 
 @Service("servicioRegistrarUsuario")
 @Transactional
 public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
+	
+	final static Logger logger = Logger.getLogger(ServicioRegistrarUsuarioImpl.class);
 	
 	@Inject
 	private RegistrarUsuarioDao servicioRegitrarUsuarioDao;
@@ -25,6 +31,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		String pass = usuario.getPassword();
 		
 		if(pass.length()<12){
+			logger.warn("Error al cambiar la password: Contraseña muy corta"); 
 			return false;
 		}else if(pass.length()>=12){
 			
@@ -49,8 +56,8 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		        	
 		        	 //Valida que el pass no se encuentre en el archivo
     	        	 if(aux.equals(pass)){
-							return false;
-							
+    	        		 logger.warn("Error al cambiar la password: Contraseña muy predecible");
+    	        		 return false;							
 						}
 		         }
 	     
@@ -64,6 +71,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		               fr.close();     
 		            }                  
 		         }catch (IOException e2){ 
+		        	 
 		            return false;
 		         }
 		      }
@@ -76,6 +84,7 @@ public class ServicioRegistrarUsuarioImpl implements ServicioRegistrarUsuario {
 		                	servicioRegitrarUsuarioDao.registrarUsuario(usuario);
 		                	return true;
 		                } else{
+		                	logger.warn("Error al cambiar la password: Contraseña débil");
 		                	return false;
 		                }
 		

@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -18,7 +19,8 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 
 @Controller
 public class ControladorLogin {
-
+	
+	final static Logger logger = Logger.getLogger(ControladorLogin.class);
 	// La anotacion @Inject indica a Spring que en este atributo se debe setear (inyeccion de dependencias)
 	// un objeto de una clase que implemente la interface ServicioLogin, dicha clase debe estar anotada como
 	// @Service o @Repository y debe estar en un paquete de los indicados en applicationContext.xml
@@ -38,6 +40,7 @@ public class ControladorLogin {
 		modelo.put("usuario", usuario);
 		// Se va a la vista login (el nombre completo de la lista se resuelve utilizando el view resolver definido en el archivo spring-servlet.xml)
 		// y se envian los datos a la misma  dentro del modelo
+		logger.info("El usuario ingresó al login");
 		return new ModelAndView("login", modelo);
 	}
 
@@ -56,13 +59,16 @@ public class ControladorLogin {
 			model.put("sesion", request);
 //			return new ModelAndView("redirect:/home");
 		if("user".equals(usuarioBuscado.getRol())){
+			logger.info("El usuario se logeo con éxito");
 			return new ModelAndView("redirect:/homeUser",model);
 			}
 		if("admin".equals(usuarioBuscado.getRol())){
+			logger.info("El administrador se logeo con éxito");
 			return new ModelAndView("redirect:/homeAdmin", model);
 			}
 		} else {
 			// si el usuario no existe agrega un mensaje de error en el modelo.
+			logger.warn("El usuario no existe o ingreso mal sus datos");
 			model.put("error", "Usuario o clave incorrecta");
 		}
 		return new ModelAndView("login", model);
@@ -116,6 +122,7 @@ public class ControladorLogin {
 		request.removeAttribute("id");
 		request.removeAttribute("rol");
 		session.invalidate();
+		logger.info("El usuario cerró sesión");
 		}	
 		return new ModelAndView("redirect:/login");
 	}
