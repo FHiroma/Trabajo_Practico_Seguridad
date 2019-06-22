@@ -8,5 +8,9 @@
 </head>
 <body>
 		<h1>${texto}</h1>
+		
+		
+		<a href="http://localhost:8080/proyecto-limpio-spring/listadoDeUsuarios">
+		<button class="btn btn-lg btn-danger btn-block"/>Atrás</button></a>
 </body>
 </html>

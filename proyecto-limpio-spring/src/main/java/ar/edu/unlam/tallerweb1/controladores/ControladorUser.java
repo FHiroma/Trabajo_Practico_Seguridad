@@ -15,12 +15,15 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
 @Controller
 public class ControladorUser {
+	
+	
 	@Inject
 	private ServicioLog servicioLog;
 	
 	@RequestMapping(path="verHistorialDeActividad")
 	public ModelAndView verHistorialDeActividad(HttpServletRequest request){
 		ModelMap modelo = new ModelMap();
+		System.out.println((Long)request.getSession().getAttribute("id"));
 		List<Log> listado = servicioLog.traerRegistrosDelUsuario((Long)request.getSession().getAttribute("id"));
 		modelo.put("lista", listado);
 		return new ModelAndView ("historialDeActividad",modelo);

@@ -31,6 +31,7 @@ public class SerivcioAdminImpl implements ServicioAdmin{
 	}
 
 	@Override
-	public void leerTxt(StringBuilder sb, Long id) {
+	public StringBuilder leerTxt(StringBuilder sb, Long id) {
+		return servicioAdmin.leerTxt(sb, id);
 	}
 }

@@ -19,10 +19,11 @@
 			<a href="http://localhost:8080/proyecto-limpio-spring/crear-texto"> 
 				<h3 class="form-signin-heading">Crea un texto</h3> </a>
 				
-				<a href="http://localhost:8080/proyecto-limpio-spring/leer-texto"> 
-				<h3 class="form-signin-heading">Leer texto</h3> </a>
+
 				
-				<a href="http://localhost:8080/proyecto-limpio-spring/logout">
+				<a href="http://localhost:8080/proyecto-limpio-spring/logout"> 
+				
+				
 				<button>Log out</button> </a>	
 		</div>
 		<!-- Placed at the end of the document so the pages load faster -->

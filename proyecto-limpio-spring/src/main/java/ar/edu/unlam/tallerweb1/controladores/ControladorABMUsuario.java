@@ -1,10 +1,25 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Scanner;
+
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.swing.JLabel;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,47 +29,31 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import ar.edu.unlam.tallerweb1.modelo.PasswordResetToken;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
-import ar.edu.unlam.tallerweb1.servicios.EmailService;
 import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
-import ar.edu.unlam.tallerweb1.servicios.ServicioRecaptcha;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
-import ar.edu.unlam.tallerweb1.servicios.ServicioToken;
-import static j2html.TagCreator.*;
 
 @Controller
 public class ControladorABMUsuario {
 	
+	final static Logger logger = Logger.getLogger(ControladorABMUsuario.class);
+	
 	@Inject
 	private ServicioBMUsuario servicioModificacionUsuario;
+	@Inject 
+	private ServicioBMUsuario servicioRecuperarPassword;
 	@Inject
 	private ServicioLog servicioLog;
 	@Inject
 	private ServicioRegistrarUsuario servicioRegistrarUsuario;
-	@Inject 
-	private ServicioBMUsuario servicioVerificarEmailUsuario;
 	@Inject
-	private ServicioToken servicioCrearToken;
+	private ServicioLogin servicioLogin;
 	@Inject
-	private ServicioToken servicioVerificarToken;
-	@Inject
-	private ServicioBMUsuario servicioCambiarClave;
-	@Inject 
-	private ServicioRecaptcha servicioRecaptcha;
-	@Inject 
 	private ServicioBMUsuario servicioCrearTxt;
-	@Inject
-	private ServicioBMUsuario servicioRecuperarUsuarioId;
-	@Inject
-	private ServicioBMUsuario servicioCambiarClaveDeUsuario;
-	@Inject
-	private EmailService servicioEnviarMail;
-	@Inject
-	private ServicioBMUsuario servicioRecuperarUsuarioConIdYPassword;
+
 	
 	@RequestMapping("/actualizar-datos-usuario")
 	public ModelAndView actualizarDatosUsuario(){
@@ -68,7 +67,7 @@ public class ControladorABMUsuario {
 	public ModelAndView modificarDatosUsuario(@ModelAttribute("usuario") Usuario usuario , HttpServletRequest request){
 		Long id=(Long)request.getSession().getAttribute("id");
 		servicioModificacionUsuario.modificarUsuario(id, usuario);
-		servicioLog.guardarRegistro("modificar-datos", id);
+		servicioLog.guardarRegistro("modificar-datos", id);	
 		return new ModelAndView("mensajeActualizacion");
 	}
 	
@@ -82,26 +81,17 @@ public class ControladorABMUsuario {
 	
 	@RequestMapping(path="/validar-email", method = RequestMethod.POST)
 	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario){
-		String mail= usuario.getEmail();
-		Usuario u=servicioVerificarEmailUsuario.verificarUsuarioEmail(mail);
-		if(u != null){
-			PasswordResetToken token=servicioCrearToken.crearToken(u);
-			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
-					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken());
-//			a("Enlace").withHref("http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken())
-			ModelMap modelo = new ModelMap();
-			modelo.put("usuario", u);
-			modelo.put("exito", "Solicitud de cambio de contraseña Usuario:");
-			return new ModelAndView("exito", modelo);
-		} else {
-			ModelMap modelo= new ModelMap();
-			modelo.put("error", "No existe usuario con ese Email");
-			return new ModelAndView("exito", modelo);
-		}
+		String email= usuario.getEmail();
+		String password=usuario.getPassword();
+		servicioRecuperarPassword.recuperarPassword(email, password);
+		ModelMap model = new ModelMap();
+		model.put("password", "Actualizacion de contrase�a exitosa, Ingrese su usuario y su nueva clave");
+		return new ModelAndView("login", model);
 	}
 	
 	@RequestMapping("/registro")
-	public ModelAndView registrarUsuario(){	
+	public ModelAndView registrarUsuario(HttpServletRequest request){	
+		logger.info("Solicitud registrar usuario. Usuario");
 		ModelMap modelo = new ModelMap();
 		Usuario usuario = new Usuario();
 		modelo.put("usuario", usuario);
@@ -109,90 +99,47 @@ public class ControladorABMUsuario {
 	}
 	
 	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
-	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) throws Exception{
+	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
 		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
+		request.getSession().setAttribute("id", usuario.getId());
+		request.getSession().setAttribute("rol", usuario.getRol());
 		String mensaje="";
-		
-		/* necesario para el captcha*/
-			boolean isHuman = servicioRecaptcha.checkRecaptcha(request);
-		/* Fin captcha */
-		
 		ModelMap model = new ModelMap();
-		if(validarPass&&isHuman){
+		
+		if(validarPass){
+			logger.info("El usuario se registró correctamente");
 			return new ModelAndView("homeUser");
 		}else{
 			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
 			model.put("mensaje", mensaje);
+			logger.warn("El usuario no se pudo registrar correctamente"+mensaje); 
 			return new ModelAndView("registrarUsuario", model);
-		}		
-	}
-	
-	@RequestMapping("/solicitar-cambio-clave")
-	public ModelAndView solicitarCambioClave(@RequestParam ("token") String token){
-		Boolean verificarToken=servicioVerificarToken.verificarToken(token);
-		if(verificarToken==true){
-			ModelMap modelo= new ModelMap();
-			modelo.put("token", token);
-			return new ModelAndView("formularioCambiarClaveUsuario",modelo);
-		}else{
-			Usuario usuario =servicioVerificarToken.recuperarUsuarioConToken(token);
-			ModelMap modelo= new ModelMap();
-			modelo.put("usuario", usuario);
-			modelo.put("error", "Token expirado");
-			return new ModelAndView("vistaTokenExpirado",modelo);
 		}
+			
 	}
-	
-	@RequestMapping(path="/cambiar-clave", method = RequestMethod.POST)
-	public ModelAndView cambiarClave(@ModelAttribute ("token") String token,
-									 @ModelAttribute ("password") String password){
-		servicioCambiarClave.cambiarClave(token, password);
-		Usuario usuario =servicioVerificarToken.recuperarUsuarioConToken(token);
-		servicioEnviarMail.send(usuario.getEmail(), "Cambio de clave", "Se ha cambiado la clave de su cuenta" + usuario.getEmail());
-		ModelMap modelo= new ModelMap();
-		modelo.put("error", "Cambio de clave correcto!."
-				+ "Vuelva a introducir sus datos para iniciar sesion");
-		return new ModelAndView("redirect:/login",modelo);
-    }
 	
 	@RequestMapping("/crear-texto")
     public ModelAndView crearTxt(HttpServletRequest request){
-        ModelMap model = new ModelMap();   
+        ModelMap model = new ModelMap();
+             
         Usuario usuario = new Usuario();
+        
         model.put("usuario", usuario);
+        
         return new ModelAndView("vista-txt",model);
     }
 
-	@RequestMapping(path="/texto-ok", method= RequestMethod.POST)
-	public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){	
-		ModelMap model = new ModelMap();   
-		String mensaje= usuario.getText();
-		Long id = (Long) request.getSession().getAttribute("id");
-		servicioCrearTxt.crearTxt(mensaje,id);
-		model.put("id",id);
-		model.put("mensaje",mensaje);
-		return new ModelAndView("texto",model);
-	}
-	
-	@RequestMapping("/actualizar-password")
-	public ModelAndView actuzalizarPassword(){	
-		return new ModelAndView("vista-formulario-cambiar-clave-logeado");
-	}
-	
-	@RequestMapping("/cambiar-clave-logeado")
-	public ModelAndView cambiarClaveUsuarioLogeado(@ModelAttribute ("password") String password
-												   , @ModelAttribute ("nvopass") String password1
-												   , @ModelAttribute ("repeticion") String password2
-												   , HttpServletRequest request){
-		Long id = (Long) request.getSession().getAttribute("id");
-		Usuario usuario = servicioRecuperarUsuarioConIdYPassword.recuperarUsuarioConIdYPassword(id, password);
-		System.out.println(usuario.getEmail());
-		if(password1.equals(password2)){
-			servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
-		}
-		return new ModelAndView("cambio-password-logeado");
-	}
-	
-	
+	  @RequestMapping(path="/texto-ok", method= RequestMethod.POST)
+	  public ModelAndView textoOk(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){	
+	  ModelMap model = new ModelMap();   
+	  String mensaje= usuario.getText();
+	  Long id = (Long) request.getSession().getAttribute("id");
+	  servicioCrearTxt.crearTxt(mensaje,id);
+	  model.put("id",id);
+	  model.put("mensaje",mensaje);
+	  return new ModelAndView("texto",model);
+	  }
+	  
+
 	
 }

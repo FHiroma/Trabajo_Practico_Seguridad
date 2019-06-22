@@ -17,8 +17,7 @@
 			        <c:when test="${log.codigo == 3}">Se modificaron datos de la cuenta.</c:when>
 			        <c:when test="${log.codigo == 4}">Se modificó el texto.</c:when>
 			        <c:when test="${log.codigo == 5}">Se recuperó la contraseña</c:when>
-			        <c:when test="${log.codigo == 6}">Se registró</c:when>		
-			        <c:when test="${log.codigo == 7}">Falló autenticación de login</c:when>	        
+			        <c:when test="${log.codigo == 6}">Se registró</c:when>		        
 			        <c:otherwise>Unknown</c:otherwise>
     			</c:choose>
     </h3>

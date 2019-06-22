@@ -1,8 +1,6 @@
 package ar.edu.unlam.tallerweb1.dao;
 
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
-import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -20,8 +18,6 @@ public class UsuarioDaoImpl implements UsuarioDao {
 	// el mismo está difinido en el archivo hibernateContext.xml
 	@Inject
     private SessionFactory sessionFactory;
-	@Inject
-	private ServicioLog servicioLog;
 	@Override
 	public Usuario consultarUsuario(Usuario usuario) {
 
@@ -32,15 +28,12 @@ public class UsuarioDaoImpl implements UsuarioDao {
 		Usuario u= (Usuario) session.createCriteria(Usuario.class)
 				.add(Restrictions.eq("email", usuario.getEmail()))
 				.uniqueResult();
-		if(u != null){
-			if(BCrypt.checkpw(usuario.getPassword(), u.getPassword())){
-				return u;
-			}else{
-				servicioLog.guardarRegistro("fallo-login", u.getId());
-				return null;
-			}
+		
+		if(BCrypt.checkpw(usuario.getPassword(), u.getPassword())){
+			return u;
+		}else{
+			return null;
 		}
-		return null;
 	}
 	
 }

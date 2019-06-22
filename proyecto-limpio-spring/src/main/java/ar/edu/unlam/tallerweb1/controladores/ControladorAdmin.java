@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +23,8 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
 
 @Controller
 public class ControladorAdmin {
+	final static Logger logger = Logger.getLogger(ControladorAdmin.class);
+	
 	@Inject
 	private ServicioAdmin servicioAdmin;
 	@Inject 
@@ -30,7 +33,8 @@ public class ControladorAdmin {
 	private ServicioAdmin servicioLeerTxt;
 
 	@RequestMapping("/listadoDeUsuarios")
-	public ModelAndView irAListadoDeUsuarios() {
+	public ModelAndView irAListadoDeUsuarios(HttpServletRequest request) {
+		Long id=(Long)request.getSession().getAttribute("id");
 		ModelMap modelo = new ModelMap();
 		List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
 		modelo.put("lista", lista);
@@ -72,14 +76,13 @@ public class ControladorAdmin {
 		return new ModelAndView("historialDeActividad",modelo);
 	}
 	
-	@RequestMapping(path="/leer-file/{id}")
+	@RequestMapping(path="/leer-file")
 	public ModelAndView leerFileTxt(@RequestParam ("id") Long id) {
 	ModelMap modelo = new ModelMap();		
-	List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
-	modelo.put("lista", lista);
+	//List<Usuario> lista = servicioAdmin.traerListadoDeUsuarios();
+	//modelo.put("lista", lista);
 	StringBuilder sb = new StringBuilder();
 	servicioLeerTxt.leerTxt(sb,id);
-	System.out.println(sb);
 	modelo.put("texto", sb);
 	return new ModelAndView("leer-file",modelo);
 	} 

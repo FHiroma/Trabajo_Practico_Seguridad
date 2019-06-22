@@ -1,16 +1,22 @@
 package ar.edu.unlam.tallerweb1.dao;
+import ar.edu.unlam.tallerweb1.controladores.ControladorABMUsuario;
+import ar.edu.unlam.tallerweb1.controladores.ControladorLogin;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
+
+import org.apache.log4j.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import javax.inject.Inject;
-import javax.servlet.http.HttpServletRequest;
+
 
 import org.springframework.security.crypto.bcrypt.*;
 
 @Repository("registrarUsuarioDao")
 public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
+	
+	final static Logger logger = Logger.getLogger(RegistrarUsuarioDaoImpl.class);
 	
 	@Inject
     private SessionFactory sessionFactory;
@@ -25,11 +31,11 @@ public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
 		if(listaUsuario.isEmpty()){
 			usuario.setRol("user");
 			usuario.setEstado(true);
-			usuario.setSalt();
-			usuario.setPassword(BCrypt.hashpw(usuario.getPassword(), usuario.getSalt()));
+			usuario.setPassword(BCrypt.hashpw(usuario.getPassword(), BCrypt.gensalt()));
 			sessionFactory.getCurrentSession().save(usuario);
 			return true;
 		}else{
+			logger.warn("Error al registrar usuario: validar email");
 			return false;
 		}
 	}

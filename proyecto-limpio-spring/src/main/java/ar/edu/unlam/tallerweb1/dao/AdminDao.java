@@ -9,5 +9,5 @@ public interface AdminDao {
 	List<Usuario> traerListadoDeUsuarios();
 	String activarUsuario(Long id);
 	String desactivarUsuario(Long id);
-	void leerTxt(StringBuilder sb, Long id);
+	StringBuilder leerTxt(StringBuilder sb, Long id);
 }

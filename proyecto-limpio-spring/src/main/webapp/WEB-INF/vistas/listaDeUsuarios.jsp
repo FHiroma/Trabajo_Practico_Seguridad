@@ -29,11 +29,11 @@
 		        <h4><a href="http://localhost:8080/proyecto-limpio-spring/desactivar-usuario?id=${usuario.id}"><button>Desactivar</button></a></h4>
         </c:if>	
         <a href="http://localhost:8080/proyecto-limpio-spring/ver-historial?id=${usuario.id}"><button>Historial</button></a>
+        
+        <h4><a href="http://localhost:8080/proyecto-limpio-spring/leer-file?id=${usuario.id}"><button>Ver TXT</button></a></h4>
 </c:forEach>
 
-<c:forEach items="${lista}" var="usuario">
-	 <h4><a href="http://localhost:8080/proyecto-limpio-spring/vista-txt?id=${usuario.id}"><button>Ver TXT</button></a></h4>
-</c:forEach>
+
 
 </body>
 </html>

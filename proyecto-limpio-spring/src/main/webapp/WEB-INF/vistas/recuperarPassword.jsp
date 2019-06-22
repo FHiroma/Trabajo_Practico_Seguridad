@@ -15,8 +15,10 @@
 					<label>Email:</label>
 					<form:input path="email" id="email" type="email" class="form-control" />
 					<br><br>
-					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Recuperar Password</button>
+					<label>Password:</label>
+					<form:input path="password" id="password" type="password" class="form-control" />
+					<br><br>
+					<button class="btn btn-lg btn-primary btn-block" Type="Submit"/>Resetear Clave</button>
 				</form:form>
-				<script src="https://www.google.com/recaptcha/api.js"></script>	
 </body>
 </html>
