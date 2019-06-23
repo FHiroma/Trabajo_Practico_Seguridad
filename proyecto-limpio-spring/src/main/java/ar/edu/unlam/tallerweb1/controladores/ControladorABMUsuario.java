@@ -3,12 +3,10 @@ package ar.edu.unlam.tallerweb1.controladores;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JLabel;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,17 +15,17 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.unlam.tallerweb1.modelo.PasswordResetToken;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.EmailService;
-import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
-import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRecaptcha;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioToken;
-import static j2html.TagCreator.*;
+import org.apache.log4j.*;
 
 @Controller
 public class ControladorABMUsuario {
+	
+	final static Logger logger = Logger.getLogger(ControladorABMUsuario.class);
 	
 	@Inject
 	private ServicioBMUsuario servicioModificacionUsuario;
@@ -47,8 +45,6 @@ public class ControladorABMUsuario {
 	private ServicioRecaptcha servicioRecaptcha;
 	@Inject 
 	private ServicioBMUsuario servicioCrearTxt;
-	@Inject
-	private ServicioBMUsuario servicioRecuperarUsuarioId;
 	@Inject
 	private ServicioBMUsuario servicioCambiarClaveDeUsuario;
 	@Inject
@@ -86,6 +82,7 @@ public class ControladorABMUsuario {
 		Usuario u=servicioVerificarEmailUsuario.verificarUsuarioEmail(mail);
 		if(u != null){
 			PasswordResetToken token=servicioCrearToken.crearToken(u);
+			logger.info("validarMail: se creo token usuario:" + u.toString());
 			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
 					,"http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken());
 //			a("Enlace").withHref("http://localhost:8080/proyecto-limpio-spring/solicitar-cambio-clave?token="+token.getToken())
@@ -94,6 +91,7 @@ public class ControladorABMUsuario {
 			modelo.put("exito", "Solicitud de cambio de contraseña Usuario:");
 			return new ModelAndView("exito", modelo);
 		} else {
+			logger.warn("No existe usuario con Email:" + mail.toString());
 			ModelMap modelo= new ModelMap();
 			modelo.put("error", "No existe usuario con ese Email");
 			return new ModelAndView("exito", modelo);
@@ -119,8 +117,10 @@ public class ControladorABMUsuario {
 		
 		ModelMap model = new ModelMap();
 		if(validarPass&&isHuman){
-			return new ModelAndView("homeUser");
+			logger.info("Usuario registrado:" + usuario.toString());
+			return new ModelAndView("redirect:/login");
 		}else{
+			logger.warn("Usuario NO registrado:" + usuario.toString());
 			mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
 			model.put("mensaje", mensaje);
 			return new ModelAndView("registrarUsuario", model);
@@ -131,11 +131,13 @@ public class ControladorABMUsuario {
 	public ModelAndView solicitarCambioClave(@RequestParam ("token") String token){
 		Boolean verificarToken=servicioVerificarToken.verificarToken(token);
 		if(verificarToken==true){
+			logger.info("Token verificado:");
 			ModelMap modelo= new ModelMap();
 			modelo.put("token", token);
 			return new ModelAndView("formularioCambiarClaveUsuario",modelo);
 		}else{
 			Usuario usuario =servicioVerificarToken.recuperarUsuarioConToken(token);
+			logger.warn("Token expirado" + token.toString());
 			ModelMap modelo= new ModelMap();
 			modelo.put("usuario", usuario);
 			modelo.put("error", "Token expirado");
@@ -184,11 +186,22 @@ public class ControladorABMUsuario {
 												   , @ModelAttribute ("nvopass") String password1
 												   , @ModelAttribute ("repeticion") String password2
 												   , HttpServletRequest request){
+		if(password.equals(null)){
+			logger.warn("cambiarClaveUsuarioLogeado" + "Campo password vacio");
+		}
+		if(password.equals(null)){
+			logger.warn("cambiarClaveUsuarioLogeado" + "Campo nvopass vacio");
+		}
+		if(password.equals(null)){
+			logger.warn("cambiarClaveUsuarioLogeado" + "Campo repeticion vacio");
+		}
 		Long id = (Long) request.getSession().getAttribute("id");
 		Usuario usuario = servicioRecuperarUsuarioConIdYPassword.recuperarUsuarioConIdYPassword(id, password);
 		System.out.println(usuario.getEmail());
 		if(password1.equals(password2)){
 			servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
+		}else{
+			logger.warn("NO coinciden los campos:" + "nvopass, repeticion");
 		}
 		return new ModelAndView("cambio-password-logeado");
 	}
