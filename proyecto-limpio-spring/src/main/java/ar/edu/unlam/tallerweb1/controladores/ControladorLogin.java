@@ -69,7 +69,7 @@ public class ControladorLogin {
 			}
 		} else {
 			// si el usuario no existe agrega un mensaje de error en el modelo.
-			logger.warn("No exite usuario:" + usuario.toString());
+			logger.warn("No exite usuario registrado:" + usuario.getEmail());
 			model.put("error", "Usuario o clave incorrecta");
 		}
 		return new ModelAndView("login", model);

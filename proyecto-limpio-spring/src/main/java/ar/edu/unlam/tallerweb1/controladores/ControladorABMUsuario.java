@@ -101,7 +101,7 @@ public class ControladorABMUsuario {
 			modelo.put("exito", "Solicitud de cambio de contraseña Usuario:");
 			return new ModelAndView("exito", modelo);
 		} else {
-			logger.warn("NO ValidarEmail:" + usuario.toString());
+			logger.warn("NO ValidarEmail: No existe usuario con Email" + usuario.getEmail());
 			ModelMap modelo= new ModelMap();
 			String mensaje="No existe usuario con ese Email";
 			modelo.put("error", mensaje);
@@ -120,7 +120,6 @@ public class ControladorABMUsuario {
 	@RequestMapping(path="registrar-usuario", method= RequestMethod.POST)
 	public ModelAndView insertarUsuario(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request, HttpServletResponse response) throws Exception{
 		boolean validarPass = servicioRegistrarUsuario.registrarUsuario(usuario);
-		logger.info("Se ha registrado el Usuario:" +usuario.toString());
 		String mensaje="";
 		
 		/* necesario para el captcha*/
@@ -129,6 +128,7 @@ public class ControladorABMUsuario {
 		
 		ModelMap model = new ModelMap();
 		if(validarPass&&isHuman){
+			logger.info("Se ha registrado el Usuario:" +usuario.toString());
 			return new ModelAndView("redirect:/login");
 		}else{
 			logger.warn("No valida password" + usuario.toString());
