@@ -77,13 +77,20 @@ public class ControladorABMUsuario {
 	}
 	
 	@RequestMapping(path="/validar-email", method = RequestMethod.POST)
-	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario){
+	public ModelAndView validarEmail(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request){
 		String mail= usuario.getEmail();
-		if(mail.equals(null)){
+		if(mail.isEmpty()){
 			logger.info("Campo Mail vacio");
+			ModelMap modelo= new ModelMap();
+			String mensaje="Ingrese su Email para recuperar su contraseña";
+			modelo.put("error", mensaje);
+			return new ModelAndView("recuperarPassword", modelo);
 		}
 		Usuario u=servicioVerificarEmailUsuario.verificarUsuarioEmail(mail);
-		if(u != null){
+		/* necesario para el captcha*/
+		boolean isHuman = servicioRecaptcha.checkRecaptcha(request);
+	/* Fin captcha */
+		if(u != null && isHuman){
 			logger.info("ValidarEmail:" + usuario.toString());
 			PasswordResetToken token=servicioCrearToken.crearToken(u);
 			servicioEnviarMail.send(u.getEmail(), "Recuperar Password"
@@ -96,8 +103,9 @@ public class ControladorABMUsuario {
 		} else {
 			logger.warn("NO ValidarEmail:" + usuario.toString());
 			ModelMap modelo= new ModelMap();
-			modelo.put("error", "No existe usuario con ese Email");
-			return new ModelAndView("exito", modelo);
+			String mensaje="No existe usuario con ese Email";
+			modelo.put("error", mensaje);
+			return new ModelAndView("recuperarPassword", modelo);
 		}
 	}
 	
