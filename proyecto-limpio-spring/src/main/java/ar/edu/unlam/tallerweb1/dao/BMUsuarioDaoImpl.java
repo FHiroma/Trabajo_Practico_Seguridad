@@ -44,7 +44,7 @@ public class BMUsuarioDaoImpl implements BMUsuarioDao {
 
 	
 	@Override
-	public Boolean cambiarClave(String token, String password) {
+	public boolean cambiarClave(String token, String password) {
 		PasswordResetToken t= (PasswordResetToken) sessionFactory.getCurrentSession()
 				.createCriteria(PasswordResetToken.class)
 				.add(Restrictions.eq("token", token))

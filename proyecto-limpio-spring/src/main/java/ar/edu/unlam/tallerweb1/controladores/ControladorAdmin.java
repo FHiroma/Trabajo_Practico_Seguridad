@@ -1,7 +1,5 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -11,7 +9,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -67,6 +64,8 @@ public class ControladorAdmin {
 		modelo.put("lista", lista);
 		return new ModelAndView("listaDeUsuarios",modelo);
 	}
+	
+	@SuppressWarnings("null")
 	@RequestMapping(path="/ver-historial")
 	public ModelAndView traerHistorialDelUsuario(@RequestParam ("id") Long id,HttpServletRequest request){
 		String rol=(String)request.getSession().getAttribute("rol");

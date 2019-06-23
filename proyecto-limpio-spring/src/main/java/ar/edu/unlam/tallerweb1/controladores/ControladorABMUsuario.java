@@ -3,12 +3,10 @@ package ar.edu.unlam.tallerweb1.controladores;
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.JLabel;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,14 +15,11 @@ import org.springframework.web.servlet.ModelAndView;
 import ar.edu.unlam.tallerweb1.modelo.PasswordResetToken;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import ar.edu.unlam.tallerweb1.servicios.EmailService;
-import ar.edu.unlam.tallerweb1.servicios.ServicioAdmin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioBMUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioLog;
-import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRecaptcha;
 import ar.edu.unlam.tallerweb1.servicios.ServicioRegistrarUsuario;
 import ar.edu.unlam.tallerweb1.servicios.ServicioToken;
-import static j2html.TagCreator.*;
 import org.apache.log4j.*;
 
 @Controller
@@ -50,8 +45,6 @@ public class ControladorABMUsuario {
 	private ServicioRecaptcha servicioRecaptcha;
 	@Inject 
 	private ServicioBMUsuario servicioCrearTxt;
-	@Inject
-	private ServicioBMUsuario servicioRecuperarUsuarioId;
 	@Inject
 	private ServicioBMUsuario servicioCambiarClaveDeUsuario;
 	@Inject
@@ -139,7 +132,7 @@ public class ControladorABMUsuario {
 	
 	@RequestMapping("/solicitar-cambio-clave")
 	public ModelAndView solicitarCambioClave(@RequestParam ("token") String token){
-		Boolean verificarToken=servicioVerificarToken.verificarToken(token);
+		boolean verificarToken=servicioVerificarToken.verificarToken(token);
 		if(verificarToken==true){
 			ModelMap modelo= new ModelMap();
 			modelo.put("token", token);
@@ -205,15 +198,21 @@ public class ControladorABMUsuario {
 		if(password2.equals(null)){
 			logger.warn("Campo repeticion:" + "cambiarClaveUsuarioLogeado");
 		}
+		/* necesario para el captcha*/
+		boolean isHuman = servicioRecaptcha.checkRecaptcha(request);
+		/* Fin captcha */
 		Long id = (Long) request.getSession().getAttribute("id");
 		Usuario usuario = servicioRecuperarUsuarioConIdYPassword.recuperarUsuarioConIdYPassword(id, password);
 		logger.info("Usuario validado:" + usuario.toString());
-		if(password1.equals(password2)){
-			servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
-		}
-		return new ModelAndView("cambio-password-logeado");
+		boolean validarpass= servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
+		if(password1.equals(password2)&&isHuman&&validarpass){
+			return new ModelAndView("redirect:/login");	
+		}else{
+			logger.warn("No valida password" + usuario.toString());
+			ModelMap model= new ModelMap();
+			String mensaje="Revise sus datos, no cumplen con nuestras politicas de seguridad";
+			model.put("mensaje", mensaje);
+			return new ModelAndView("vista-formulario-cambiar-clave-logeado", model);
+		}	
 	}
-	
-	
-	
 }
