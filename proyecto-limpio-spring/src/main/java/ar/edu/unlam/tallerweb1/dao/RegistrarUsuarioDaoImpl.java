@@ -1,4 +1,5 @@
 package ar.edu.unlam.tallerweb1.dao;
+import ar.edu.unlam.tallerweb1.modelo.PasswordsHistoricas;
 import ar.edu.unlam.tallerweb1.modelo.Usuario;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -28,6 +29,10 @@ public class RegistrarUsuarioDaoImpl implements RegistrarUsuarioDao{
 			usuario.setPassword(BCrypt.hashpw(usuario.getPassword(), usuario.getSalt()));
 			usuario.setIntentos(0);
 			sessionFactory.getCurrentSession().save(usuario);
+			PasswordsHistoricas password= new PasswordsHistoricas();
+			password.setUsuario(usuario);
+			password.setPassword(BCrypt.hashpw(usuario.getPassword(), usuario.getSalt()));
+			sessionFactory.getCurrentSession().save(password);
 			return true;
 		}else{
 			return false;

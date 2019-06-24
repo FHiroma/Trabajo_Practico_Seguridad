@@ -1,5 +1,7 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -192,7 +194,7 @@ public class ControladorABMUsuario {
 		return new ModelAndView("vista-formulario-cambiar-clave-logeado");
 	}
 	
-	@RequestMapping("/cambiar-clave-logeado")
+	@RequestMapping(path="/cambiar-clave-logeado", method= RequestMethod.POST)
 	public ModelAndView cambiarClaveUsuarioLogeado(@ModelAttribute ("password") String password
 												   , @ModelAttribute ("nvopass") String password1
 												   , @ModelAttribute ("repeticion") String password2
@@ -214,7 +216,7 @@ public class ControladorABMUsuario {
 		logger.info("Usuario validado:" + usuario.toString());
 		boolean validarpass= servicioCambiarClaveDeUsuario.cambiarClaveDeUsuario(usuario, password1);
 		if(password1.equals(password2)&&isHuman&&validarpass){
-			return new ModelAndView("redirect:/login");	
+			return new ModelAndView("redirect:/");	
 		}else{
 			logger.warn("No valida password" + usuario.toString());
 			ModelMap model= new ModelMap();

@@ -1,6 +1,7 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
 import java.util.Random;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

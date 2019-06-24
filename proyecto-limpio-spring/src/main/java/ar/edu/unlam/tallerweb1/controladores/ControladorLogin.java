@@ -1,5 +1,8 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -36,7 +39,6 @@ public class ControladorLogin {
 	// invocada por metodo http GET
 	@RequestMapping("/login")
 	public ModelAndView irALogin() {
-
 		ModelMap modelo = new ModelMap();
 		// Se agrega al modelo un objeto del tipo Usuario con key 'usuario' para
 		// que el mismo sea asociado
