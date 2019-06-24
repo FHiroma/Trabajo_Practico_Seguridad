@@ -31,6 +31,13 @@ public class Usuario {
 	private Boolean estado;
 	private String text;
 	private String salt;
+	private Integer intentos;
+	public Integer getIntentos() {
+		return intentos;
+	}
+	public void setIntentos(Integer intentos) {
+		this.intentos = intentos;
+	}
 	public String getSalt() {
 		return salt;
 	}

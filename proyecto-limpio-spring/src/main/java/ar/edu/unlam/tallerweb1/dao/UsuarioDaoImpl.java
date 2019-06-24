@@ -16,31 +16,41 @@ import org.springframework.security.crypto.bcrypt.*;
 @Repository("usuarioDao")
 public class UsuarioDaoImpl implements UsuarioDao {
 
-	// Como todo dao maneja acciones de persistencia, normalmente estará inyectado el session factory de hibernate
+	// Como todo dao maneja acciones de persistencia, normalmente estará
+	// inyectado el session factory de hibernate
 	// el mismo está difinido en el archivo hibernateContext.xml
 	@Inject
-    private SessionFactory sessionFactory;
+	private SessionFactory sessionFactory;
 	@Inject
 	private ServicioLog servicioLog;
+
 	@Override
 	public Usuario consultarUsuario(Usuario usuario) {
 
-		// Se obtiene la sesion asociada a la transaccion iniciada en el servicio que invoca a este metodo y se crea un criterio
-		// de busqueda de Usuario donde el email y password sean iguales a los del objeto recibido como parametro
-		// uniqueResult da error si se encuentran más de un resultado en la busqueda.
+		// Se obtiene la sesion asociada a la transaccion iniciada en el
+		// servicio que invoca a este metodo y se crea un criterio
+		// de busqueda de Usuario donde el email y password sean iguales a los
+		// del objeto recibido como parametro
+		// uniqueResult da error si se encuentran más de un resultado en la
+		// busqueda.
 		final Session session = sessionFactory.getCurrentSession();
-		Usuario u= (Usuario) session.createCriteria(Usuario.class)
+		Usuario u = (Usuario) session.createCriteria(Usuario.class)
 				.add(Restrictions.eq("email", usuario.getEmail()))
 				.uniqueResult();
-		if(u != null){
-			if(BCrypt.checkpw(usuario.getPassword(), u.getPassword())){
+		if (u != null) {
+			if (BCrypt.checkpw(usuario.getPassword(), u.getPassword())) {
 				return u;
-			}else{
+			} else {
+				u.setIntentos(u.getIntentos() + 1);
+				session.update(u);
+				if (u.getIntentos() == 3) {
+					u.setEstado(false);
+					session.update(u);
+				}
 				servicioLog.guardarRegistro("fallo-login", u.getId());
 				return null;
 			}
 		}
 		return null;
 	}
-	
 }

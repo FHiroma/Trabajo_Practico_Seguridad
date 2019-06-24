@@ -1,6 +1,5 @@
 package ar.edu.unlam.tallerweb1.controladores;
 
-
 import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -19,33 +18,43 @@ import ar.edu.unlam.tallerweb1.servicios.ServicioLogin;
 
 @Controller
 public class ControladorLogin {
-	
+
 	final static Logger logger = Logger.getLogger(ControladorLogin.class);
 
-	// La anotacion @Inject indica a Spring que en este atributo se debe setear (inyeccion de dependencias)
-	// un objeto de una clase que implemente la interface ServicioLogin, dicha clase debe estar anotada como
-	// @Service o @Repository y debe estar en un paquete de los indicados en applicationContext.xml
+	// La anotacion @Inject indica a Spring que en este atributo se debe setear
+	// (inyeccion de dependencias)
+	// un objeto de una clase que implemente la interface ServicioLogin, dicha
+	// clase debe estar anotada como
+	// @Service o @Repository y debe estar en un paquete de los indicados en
+	// applicationContext.xml
 	@Inject
 	private ServicioLogin servicioLogin;
 	@Inject
 	private ServicioLog servicioLog;
-	
-	// Este metodo escucha la URL localhost:8080/NOMBRE_APP/login si la misma es invocada por metodo http GET
+
+	// Este metodo escucha la URL localhost:8080/NOMBRE_APP/login si la misma es
+	// invocada por metodo http GET
 	@RequestMapping("/login")
 	public ModelAndView irALogin() {
 
 		ModelMap modelo = new ModelMap();
-		// Se agrega al modelo un objeto del tipo Usuario con key 'usuario' para que el mismo sea asociado
+		// Se agrega al modelo un objeto del tipo Usuario con key 'usuario' para
+		// que el mismo sea asociado
 		// al model attribute del form que esta definido en la vista 'login'
 		Usuario usuario = new Usuario();
 		modelo.put("usuario", usuario);
-		// Se va a la vista login (el nombre completo de la lista se resuelve utilizando el view resolver definido en el archivo spring-servlet.xml)
-		// y se envian los datos a la misma  dentro del modelo
+		// Se va a la vista login (el nombre completo de la lista se resuelve
+		// utilizando el view resolver definido en el archivo
+		// spring-servlet.xml)
+		// y se envian los datos a la misma dentro del modelo
 		return new ModelAndView("login", modelo);
 	}
 
-	// Este metodo escucha la URL validar-login siempre y cuando se invoque con metodo http POST
-	// El método recibe un objeto Usuario el que tiene los datos ingresados en el form correspondiente y se corresponde con el modelAttribute definido en el
+	// Este metodo escucha la URL validar-login siempre y cuando se invoque con
+	// metodo http POST
+	// El método recibe un objeto Usuario el que tiene los datos ingresados en
+	// el form correspondiente y se corresponde con el modelAttribute definido
+	// en el
 	// tag form:form
 	@RequestMapping(path = "/validar-login", method = RequestMethod.POST)
 	public ModelAndView validarLogin(@ModelAttribute("usuario") Usuario usuario, HttpServletRequest request) {
@@ -78,54 +87,54 @@ public class ControladorLogin {
 	// Escucha la URL /home por GET, y redirige a una vista.
 	@RequestMapping(path = "/homeUser", method = RequestMethod.GET)
 	public ModelAndView irAHomeUser(HttpServletRequest request) {
-		
+
 		HttpSession session = request.getSession();
-		
-		String rol=(String)request.getSession().getAttribute("rol");
-		
+
+		String rol = (String) request.getSession().getAttribute("rol");
+
 		if (rol == null) {
 			session.invalidate();
-		    return new ModelAndView("redirect:/login");
+			return new ModelAndView("redirect:/login");
 		}
-		
-		if(!"user".equals(rol)){
+
+		if (!"user".equals(rol)) {
 			return new ModelAndView("redirect:/homeAdmin");
 		}
-		
-		return new ModelAndView("homeUser");	
-	}
-	
-	@RequestMapping(path = "/homeAdmin", method = RequestMethod.GET)
-	public ModelAndView irAHomeAdmin(HttpServletRequest request) {
-		
-		String rol=(String)request.getSession().getAttribute("rol");
-		HttpSession session = request.getSession();
-			if (rol == null) {
-				session.invalidate();
-				return new ModelAndView("redirect:/login");
-			}
-			if(!"admin".equals(rol)){
-				return new ModelAndView("redirect:/homeUser");
-			}
-				return new ModelAndView("homeAdmin");	
+
+		return new ModelAndView("homeUser");
 	}
 
-	// Escucha la url /, y redirige a la URL /login, es lo mismo que si se invoca la url /login directamente.
+	@RequestMapping(path = "/homeAdmin", method = RequestMethod.GET)
+	public ModelAndView irAHomeAdmin(HttpServletRequest request) {
+
+		String rol = (String) request.getSession().getAttribute("rol");
+		HttpSession session = request.getSession();
+		if (rol == null) {
+			session.invalidate();
+			return new ModelAndView("redirect:/login");
+		}
+		if (!"admin".equals(rol)) {
+			return new ModelAndView("redirect:/homeUser");
+		}
+		return new ModelAndView("homeAdmin");
+	}
+
+	// Escucha la url /, y redirige a la URL /login, es lo mismo que si se
+	// invoca la url /login directamente.
 	@RequestMapping(path = "/", method = RequestMethod.GET)
 	public ModelAndView inicio() {
 		return new ModelAndView("redirect:/login");
 	}
-	
+
 	@RequestMapping("/logout")
-	public ModelAndView logout(HttpServletRequest request){
+	public ModelAndView logout(HttpServletRequest request) {
 		HttpSession session = request.getSession();
-		if( session != null){
-		servicioLog.guardarRegistro("logout", (Long)request.getSession().getAttribute("id"));
-		request.removeAttribute("id");
-		request.removeAttribute("rol");
-		session.invalidate();
-		}	
+		if (session != null) {
+			servicioLog.guardarRegistro("logout", (Long) request.getSession().getAttribute("id"));
+			request.removeAttribute("id");
+			request.removeAttribute("rol");
+			session.invalidate();
+		}
 		return new ModelAndView("redirect:/login");
 	}
 }
-	
