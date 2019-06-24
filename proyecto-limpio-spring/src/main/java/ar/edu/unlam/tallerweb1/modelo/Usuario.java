@@ -1,6 +1,7 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
 import java.util.Random;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -31,6 +32,13 @@ public class Usuario {
 	private Boolean estado;
 	private String text;
 	private String salt;
+	private Integer intentos;
+	public Integer getIntentos() {
+		return intentos;
+	}
+	public void setIntentos(Integer intentos) {
+		this.intentos = intentos;
+	}
 	public String getSalt() {
 		return salt;
 	}
