@@ -1,12 +1,22 @@
 package ar.edu.unlam.tallerweb1;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.inject.Inject;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import ar.edu.unlam.tallerweb1.dao.AutomatizacionDao;
+import ar.edu.unlam.tallerweb1.modelo.Log;
+import ar.edu.unlam.tallerweb1.modelo.Usuario;
+import junit.framework.Assert;
 
 // Se indica que los test que hereden de esta clase corran con el runner de junit para spring.
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -18,10 +28,11 @@ public abstract class SpringTest {
     // Tiene inyectado el session factory para que los test que hereden de éste tengan acceso al mismo
     @Inject
     private SessionFactory sessionFactory;
+    @Inject
+    private AutomatizacionDao autoDao;
 
     // Metodo para obtener una sesion de base de datos
     protected Session getSession() {
         return this.sessionFactory.getCurrentSession();
     }
-
 }

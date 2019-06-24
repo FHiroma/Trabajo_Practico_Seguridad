@@ -1,7 +1,10 @@
 package ar.edu.unlam.tallerweb1.modelo;
 
 import java.util.Date;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -14,7 +17,7 @@ public class Log {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private Date fechaHora;
-	@ManyToOne
+	@ManyToOne (cascade=CascadeType.DETACH, fetch = FetchType.LAZY)
 	private Usuario usuario;
 	private Integer codigo;
 	public Long getId() {

@@ -16,7 +16,7 @@ public class PasswordResetToken {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String token;
-	@ManyToOne
+	@ManyToOne 
 	private Usuario usuario;
     private Date expiryDate;
     
